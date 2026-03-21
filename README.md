@@ -1,5 +1,6 @@
 # The-Most-Epicest-Repo-you-have-ever-seen-in-your-whole-entire-life
 printf("Now this, is epic")
+Creators: Luke, Hannah Lowery, Trey, Joseph 
 
 Chuck Norris Survivors
 Spin on classic games such as Vampire Survivors
