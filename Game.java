@@ -1,5 +1,4 @@
-import javax.swing.*;
-import Input.InputHandler;
+import javax.swing.JFrame;
 
 public class Game {
     public static void main(String[] args) {
@@ -10,8 +9,8 @@ public class Game {
         frame.setSize(800, 600);
         frame.add(panel);
         frame.setVisible(true);
-        
 
+        panel.requestFocusInWindow();
         panel.startgame();
     }
 }
