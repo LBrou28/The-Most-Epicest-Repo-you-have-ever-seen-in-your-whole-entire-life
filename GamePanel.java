@@ -61,7 +61,7 @@ public class GamePanel extends JPanel implements Runnable {
     protected void paintComponent(Graphics g) {
     super.paintComponent(g);
     if (chuck != null) {
-        g.drawImage(chuck, player.x, player.y, 40, 80, null);
+        g.drawImage(chuck, player.x, player.y, player.width, player.height, null);
         drawEnemies(g);
     } else{
         System.out.println("yo code trash ma boy");
@@ -72,34 +72,7 @@ public void drawEnemies(Graphics g) {
     for (int i = 0; i < enemies.size(); i++) {
         enemies.get(i).draw(g);
     }
+    Enemy.checkCollision(enemies, player);
 }
 
 }
-/*
-ArrayList<Enemy> enemies = new ArrayList<>();
-   @Override
-protected void paintComponent(Graphics g) {
-    super.paintComponent(g);
-
-
-    if (chuck != null) {
-        g.drawImage(chuck, 100, 100, 32, 64, null);
-        drawEnemies(g);
-        
-    } else{
-        System.out.println("yo code trash ma boy");
-    }
-    
-    
-}
-
-public void drawEnemies(Graphics g) {
-    for (int i = 0; i < enemies.size(); i++) {
-        enemies.get(i).draw(g);
-    }
-}
-
-   
-}
-
-*/

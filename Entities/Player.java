@@ -2,7 +2,7 @@ package Entities;
 import Input.InputHandler;
 
 public class Player {
-    public int x, y;
+    public int x, y, width = 40, height = 80;
     int speed = 3;
 
     InputHandler input;
