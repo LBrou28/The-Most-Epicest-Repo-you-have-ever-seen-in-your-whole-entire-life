@@ -1,42 +1,29 @@
 
 import java.awt.Color;
-import java.awt.Dimesion;
+import java.awt.Dimension;
+import javax.swing.*;
 
-import java.swing.JPanel;
-
-public class Gamepanel extends Jpanel implements Runnable{
-    //screen
-    final int originalTileSize=16;
-    final int scale=3;
-
-    final int tileSize=originalTileSize*scale; //48x48 tile
-    final int maxScreenCol =16;
-    final int maxScreenRow =12;
-    final int screenWidth = tileSize * maxScreenCol //768pixels
-    final int screenHeight =tileSize*maxScreenRow; //576 pixels
+public class GamePanel extends JPanel implements Runnable {
 
     Thread gameThread;
+    boolean running;
 
-    public Gamepanel(){
-
-        this.setPreferredSize();
+    public GamePanel() {
+        this.setPreferredSize(new Dimension(800, 600));
         this.setBackground(Color.black);
         this.setDoubleBuffered(true);
-
     }
 
-    public void startgame(){
+    public void startgame() {
         running = true;
         gameThread = new Thread(this);
         gameThread.start();
-
     }
+
     @Override
-    public void run(){
-
-        
+    public void run() {
+        while (running) {
+            // game loop code here
+        }
     }
-
-
-
 }

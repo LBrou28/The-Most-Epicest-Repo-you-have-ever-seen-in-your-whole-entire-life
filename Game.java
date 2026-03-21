@@ -1,16 +1,15 @@
 import javax.swing.*;
 
-
-public class Game{
+public class Game {
     public static void main(String[] args) {
-        JFrame frame = new JFrame("Chuck Norris Against Saddness"); 
-        Gamepanel panel = new Gamepanel(); 
+        JFrame frame = new JFrame("Chuck Norris Against Saddness");
+        GamePanel panel = new GamePanel();
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(800,600);
+        frame.setSize(800, 600);
         frame.add(panel);
+        frame.setVisible(true);
 
         panel.startgame();
     }
-
 }
