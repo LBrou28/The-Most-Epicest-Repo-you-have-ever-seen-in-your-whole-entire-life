@@ -1,6 +1,7 @@
 package Entities;
 import java.awt.*;
 
+import Entities.Enemies.Enemy;
 public class Projectile {
 
     public double x, y;
@@ -35,5 +36,12 @@ public class Projectile {
 
         return screenX < -50 || screenX > screenWidth + 50 ||
                screenY < -50 || screenY > screenHeight + 50;
+    }
+
+    public boolean checkBulletCollision(Player player) {
+    return x < player.x + player.width &&
+           x + width > player.x &&
+           y < player.y + player.height &&
+           y + height > player.y;
     }
 }

@@ -4,10 +4,13 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
+import Entities.*;
+
+import java.util.*;
 
 public class ZynDemon extends Enemy {
     
-     
+    ArrayList<Projectile> projectiles = new ArrayList<>();
     public ZynDemon() {
         super(Math.random() * 250, Math.random() * 250, 5, 5);
         enemyImage = setSprite();
@@ -15,7 +18,7 @@ public class ZynDemon extends Enemy {
         height = enemyImage.getHeight();
     }
 
-    public void attack() { }
+    public void attack(Player player) { }
 
     public BufferedImage setSprite() {
         BufferedImage enemy = null;

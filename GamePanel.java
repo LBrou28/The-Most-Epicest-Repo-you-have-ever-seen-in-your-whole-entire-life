@@ -36,7 +36,6 @@ public class GamePanel extends JPanel implements Runnable {
 
         try {
             chuck = ImageIO.read(new File("src/assets/Chuck.png"));
-            grass = ImageIO.read(new File("src/assets/grass.jpg"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -44,6 +43,8 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void startgame() {
         enemies.add(new ZynDemon());
+        enemies.add(new FireSpitter());
+        enemies.add(new SpeedyGonzales());
         running = true;
         gameThread = new Thread(this);
         gameThread.start();
