@@ -23,7 +23,7 @@ public class FireSpitter extends Enemy {
         }
         return enemy;
     }
-
+    
     public void attack(Player player) {
         projectiles.add(new Projectile((int) xPos, (int) yPos, width, height)); 
     }

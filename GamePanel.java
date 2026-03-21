@@ -87,6 +87,7 @@ protected void paintComponent(Graphics g) {
 
     for (Enemy e : enemies) {
     e.draw(g, player, getWidth(), getHeight());
+    e.attack(player);
 
     if (Enemy.checkCollision(e, player)) {
         System.out.println("collision located");

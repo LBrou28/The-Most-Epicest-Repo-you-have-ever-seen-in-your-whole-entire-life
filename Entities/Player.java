@@ -75,6 +75,7 @@ public class Player {
             shoot(closestEnemy);
             lastShotTime = currentTime;
         }
+        checkBulletCollision();
     }
 
     private Enemy getClosestEnemyInRange() {
@@ -91,11 +92,12 @@ public class Player {
             double dx = ex - px;
             double dy = ey - py;
             double dist = Math.sqrt(dx * dx + dy * dy);
-
+            
             if (dist < shootRadius && dist < closestDist) {
                 closestDist = dist;
                 closest = e;
             }
+            
         }
 
         return closest;
@@ -120,4 +122,39 @@ public class Player {
             projectiles.add(new Projectile(px, py, dx, dy));
         }
     }
+    public void checkBulletCollision() {
+    for (int i = 0; i < projectiles.size(); i++) {
+        Projectile p = projectiles.get(i);
+
+        double pX = p.x;
+        double pY = p.y;
+        double pXEnd = pX + p.width;
+        double pYEnd = pY + p.height;
+
+        for (int j = 0; j < enemies.size(); j++) {
+            Enemy e = enemies.get(j);
+
+            double eX = e.getX();
+            double eY = e.getY();
+            double eXEnd = eX + e.getWidth();
+            double eYEnd = eY + e.getHeight();
+
+            boolean overlapX = pX < eXEnd && pXEnd > eX;
+            boolean overlapY = pY < eYEnd && pYEnd > eY;
+
+            if (overlapX && overlapY) {
+                System.out.println("Enemy hit!");
+
+               
+                projectiles.remove(i);
+                i--; 
+
+                //e.takeDamage(1); // if you have health
+
+               
+                break;
+            }
+        }
+    }
+}
 }
