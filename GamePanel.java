@@ -5,8 +5,13 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
+
+import Entities.Enemies.Enemy;
+import Entities.Enemies.ZynDemon;
 
 
 public class GamePanel extends JPanel implements Runnable {
@@ -44,7 +49,6 @@ public void run() {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
     }
     
 }
@@ -55,11 +59,16 @@ protected void paintComponent(Graphics g) {
 
 
     if (chuck != null) {
-        g.drawImage(chuck, 100, 100, 32, 32, null);
-    }
-    else{
+        g.drawImage(chuck, 100, 100, 32, 64, null);
+        Enemy demon = new ZynDemon();
+        ArrayList<Enemy> enemies = new ArrayList<>();
+        enemies.add(demon);
+        demon.draw(g, enemies);
+    } else{
         System.out.println("yo code trash ma boy");
     }
+    
+    
 }
 
    

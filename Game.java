@@ -1,5 +1,5 @@
 import javax.swing.*;
-
+import Input.InputHandler;
 public class Game {
     public static void main(String[] args) {
         JFrame frame = new JFrame("Chuck Norris Against Saddness");
