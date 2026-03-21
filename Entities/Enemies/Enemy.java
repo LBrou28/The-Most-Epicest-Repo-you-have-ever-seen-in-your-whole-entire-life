@@ -57,21 +57,6 @@ public abstract class Enemy {
     }
     public abstract void attack(); 
     
-<<<<<<< HEAD
-    public double getX() {
-        return xPos;
-    }
-
-    public double getY() {
-        return yPos;
-    }
-    public double getCenterX() {
-        return getBounds().getCenterX();
-    }
-
-    public double getCenterY() {
-        return getBounds().getCenterY();
-=======
     public void removeEnemy(ArrayList<Enemy> enemies, int enemy) {
         enemies.remove(enemy);
     }
@@ -96,6 +81,5 @@ public abstract class Enemy {
         }
     
     return false;
->>>>>>> eb13a574ef3175428bd7a7009c1e4d0efd4a0111
     }
 }
