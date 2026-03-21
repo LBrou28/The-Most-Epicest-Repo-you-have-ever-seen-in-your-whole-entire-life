@@ -82,5 +82,7 @@ public class GamePanel extends JPanel implements Runnable{
         else{
         System.out.println("yo code trash ma boy");
     }
+    
+    
 }
 }
