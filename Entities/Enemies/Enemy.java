@@ -1,7 +1,6 @@
 package Entities.Enemies;
 import Entities.Player;
 import Entities.Projectile;
-
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.*;
@@ -20,16 +19,27 @@ public abstract class Enemy {
     }
 
     public Enemy() {}
-    public void draw(Graphics g, Player player) {
-            g.drawImage(enemyImage, (int)xPos, (int)yPos, width, height, null);
-            for (int i = 0; i < projectiles.size(); i++) {
-                projectiles.get(i).update();
-                projectiles.get(i).draw(g, (int)xPos,(int) yPos, width, height);
-                if (projectiles.get(i).checkBulletCollision(player)) {
-                    attack(player);
-                }
-            }
+    public void draw(Graphics g, Player player, int panelWidth, int panelHeight) {
+    int centerX = panelWidth / 2;
+    int centerY = panelHeight / 2;
+
+    int screenX = (int)xPos - player.x + centerX;
+    int screenY = (int)yPos - player.y + centerY;
+
+    g.drawImage(enemyImage, screenX, screenY, width, height, null);
+
+    for (int i = 0; i < projectiles.size(); i++) {
+        Projectile p = projectiles.get(i);
+        p.update();
+        p.draw(g, player.x, player.y, centerX, centerY);
+
+        if (p.checkBulletCollision(player)) {
+            attack(player);
+            projectiles.remove(i);
+            i--;
+        }
     }
+}
     
     public BufferedImage getSprite() {
         return enemyImage;
@@ -55,17 +65,11 @@ public abstract class Enemy {
         
     }
    
-    public void draw(Graphics g, int playerX, int playerY, int centerX, int centerY) {
-        int screenX = (int)xPos - playerX + centerX;
-        int screenY = (int)yPos - playerY + centerY;
-
-        g.drawImage(enemyImage, screenX, screenY, null);
-    }
 
 
     public static boolean checkCollision(Enemy enemy, Player player) {
 
-    int padding = 8; // 🔥 adjust this number
+    int padding = 8; //adjust this number
 
     // Player bounds (smaller hitbox)
     double playerLeft = player.x + padding;

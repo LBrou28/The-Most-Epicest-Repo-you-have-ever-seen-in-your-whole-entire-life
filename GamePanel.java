@@ -86,12 +86,12 @@ protected void paintComponent(Graphics g) {
     }
 
     for (Enemy e : enemies) {
-        e.draw(g, player.x, player.y, centerX, centerY);
+    e.draw(g, player, getWidth(), getHeight());
 
-        if (Enemy.checkCollision(e, player)) {
-            System.out.println("collision located");
-        }
+    if (Enemy.checkCollision(e, player)) {
+        System.out.println("collision located");
     }
+}
 
     for (Projectile p : projectiles) {
         p.draw(g, player.x, player.y, centerX, centerY);
