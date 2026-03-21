@@ -32,7 +32,11 @@ public class GamePanel extends JPanel implements Runnable {
 
         SwingUtilities.invokeLater(() -> requestFocusInWindow());
 
+<<<<<<< HEAD
         player = new Player(input, projectiles, enemies);
+=======
+        player = new Player(input, projectiles, enemies); 
+>>>>>>> e619941eb915fa528479466d1518fb933cef46e8
 
         try {
             chuck = ImageIO.read(new File("src/assets/Chuck.png"));
@@ -43,6 +47,10 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void startgame() {
+        enemies.add(new ZynDemon());
+        enemies.add(new ZynDemon());
+        enemies.add(new ZynDemon());
+        enemies.add(new ZynDemon());
         enemies.add(new ZynDemon());
         running = true;
         gameThread = new Thread(this);
@@ -59,9 +67,16 @@ public class GamePanel extends JPanel implements Runnable {
             Projectile p = projectiles.get(i);
             p.update();
 
+<<<<<<< HEAD
                 if (p.isOffScreen(player.x, player.y, getWidth(), getHeight())) {
                 projectiles.remove(i);
                 i--;
+=======
+                // Remove if off-screen
+                if (p.isOffScreen(this.getWidth(), this.getHeight())) {
+                    projectiles.remove(i);
+                    i--;
+>>>>>>> e619941eb915fa528479466d1518fb933cef46e8
                 }
             }   
             repaint();
