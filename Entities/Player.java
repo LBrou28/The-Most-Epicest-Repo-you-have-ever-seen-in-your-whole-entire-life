@@ -12,7 +12,7 @@ public class Player {
     long dashDuration = 150; // milliseconds
 
     long lastDashTime = 0;
-    long dashCooldown = 1000; // milliseconds
+    long dashCooldown = 5000; // milliseconds
 
     InputHandler input;
 
