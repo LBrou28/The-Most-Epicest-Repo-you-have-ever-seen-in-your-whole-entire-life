@@ -12,6 +12,7 @@ import javax.swing.*;
 public class GamePanel extends JPanel implements Runnable {
 
     BufferedImage chuck;
+    BufferedImage grass;
 
     Thread gameThread;
     boolean running;
@@ -35,6 +36,7 @@ public class GamePanel extends JPanel implements Runnable {
 
         try {
             chuck = ImageIO.read(new File("src/assets/Chuck.png"));
+            grass = ImageIO.read(new File("src/assets/grass.jpg"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -76,8 +78,17 @@ public class GamePanel extends JPanel implements Runnable {
     @Override
     protected void paintComponent(Graphics g) {
     super.paintComponent(g);
+
+    int centerX = getWidth() / 2;
+    int centerY = getHeight() / 2;
+
+    if (grass != null) {
+        g.drawImage(grass, (int)(-player.x + centerX), (int)(-player.y + centerY), null);
+    }
+
+
     if (chuck != null) {
-        g.drawImage(chuck, player.x, player.y, player.width, player.height, null);
+        g.drawImage(chuck, centerX - 16, centerY - 32, 32, 64, null);
         drawEnemies(g);
         drawProjectiles(g); //draw my projectiles
     } else{
