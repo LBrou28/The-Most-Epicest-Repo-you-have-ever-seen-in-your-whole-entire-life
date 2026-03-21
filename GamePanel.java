@@ -73,26 +73,30 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
+protected void paintComponent(Graphics g) {
+    super.paintComponent(g);
 
-        int centerX = getWidth() / 2;
-        int centerY = getHeight() / 2;
+    int centerX = getWidth() / 2;
+    int centerY = getHeight() / 2;
 
-        if (grass != null) {
-            g.drawImage(grass, (int)(-player.x + centerX), (int)(-player.y + centerY), null);
-        }
+    if (grass != null) {
+        g.drawImage(grass, (int)(-player.x + centerX), (int)(-player.y + centerY), null);
+    }
 
-        for (Enemy e : enemies) {
-            e.draw(g, player.x, player.y, centerX, centerY);
-        }
+    for (Enemy e : enemies) {
+        e.draw(g, player.x, player.y, centerX, centerY);
 
-        for (Projectile p : projectiles) {
-            p.draw(g, player.x, player.y, centerX, centerY);
-        }
-
-        if (chuck != null) {
-            g.drawImage(chuck, centerX - 16, centerY - 32, 32, 64, null);
+        if (Enemy.checkCollision(e, player)) {
+            System.out.println("collision located");
         }
     }
+
+    for (Projectile p : projectiles) {
+        p.draw(g, player.x, player.y, centerX, centerY);
+    }
+
+    if (chuck != null) {
+        g.drawImage(chuck, centerX - 16, centerY - 32, 32, 64, null);
+    }
+}
 }

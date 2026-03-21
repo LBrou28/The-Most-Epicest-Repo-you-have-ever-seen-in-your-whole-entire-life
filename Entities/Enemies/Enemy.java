@@ -33,17 +33,24 @@ public abstract class Enemy {
     public abstract void attack();
 
     public static boolean checkCollision(Enemy enemy, Player player) {
-        double playerLeft = player.x;
-        double playerTop = player.y;
-        double playerRight = playerLeft + player.width;
-        double playerBottom = playerTop + player.height;
 
-        double enemyLeft = enemy.getX();
-        double enemyTop = enemy.getY();
-        double enemyRight = enemyLeft + enemy.getWidth();
-        double enemyBottom = enemyTop + enemy.getHeight();
+    int padding = 8; // 🔥 adjust this number
 
-        return playerLeft < enemyRight && playerRight > enemyLeft &&
-               playerTop < enemyBottom && playerBottom > enemyTop;
-    }
+    // Player bounds (smaller hitbox)
+    double playerLeft = player.x + padding;
+    double playerTop = player.y + padding;
+    double playerRight = player.x + player.width - padding;
+    double playerBottom = player.y + player.height - padding;
+
+    // Enemy bounds (smaller hitbox)
+    double enemyLeft = enemy.getX() + padding;
+    double enemyTop = enemy.getY() + padding;
+    double enemyRight = enemy.getX() + enemy.getWidth() - padding;
+    double enemyBottom = enemy.getY() + enemy.getHeight() - padding;
+
+    boolean overlapX = playerLeft < enemyRight && playerRight > enemyLeft;
+    boolean overlapY = playerTop < enemyBottom && playerBottom > enemyTop;
+
+    return overlapX && overlapY;
+}
 }
