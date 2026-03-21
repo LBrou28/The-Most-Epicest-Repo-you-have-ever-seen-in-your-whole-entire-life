@@ -31,7 +31,7 @@ public class GamePanel extends JPanel implements Runnable {
 
         SwingUtilities.invokeLater(() -> requestFocusInWindow());
 
-        player = new Player(input, projectiles);
+        player = new Player(input, projectiles, enemies); 
 
         try {
             chuck = ImageIO.read(new File("src/assets/Chuck.png"));
@@ -41,6 +41,10 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void startgame() {
+        enemies.add(new ZynDemon());
+        enemies.add(new ZynDemon());
+        enemies.add(new ZynDemon());
+        enemies.add(new ZynDemon());
         enemies.add(new ZynDemon());
         running = true;
         gameThread = new Thread(this);
@@ -58,7 +62,7 @@ public class GamePanel extends JPanel implements Runnable {
                 p.update();
 
                 // Remove if off-screen
-                if (p.isOffScreen(this.getWidth())) {
+                if (p.isOffScreen(this.getWidth(), this.getHeight())) {
                     projectiles.remove(i);
                     i--;
                 }

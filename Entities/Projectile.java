@@ -1,29 +1,38 @@
 package Entities;
 import java.awt.*;
+
 public class Projectile {
 
-    int x, y;
+    double x, y;
+    double dx, dy;
     int speed = 6;
     int width = 10;
     int height = 5;
 
-    public Projectile(int x, int y) {
+    public Projectile(double x, double y, double dx, double dy) {
         this.x = x;
         this.y = y;
+
+        double length = Math.sqrt(dx * dx + dy * dy);
+        this.dx = dx / length;
+        this.dy = dy / length;
     }
 
     public void update() {
-        x += speed; // move to the right
+        x += dx * speed;
+        y += dy * speed;
     }
 
     public void draw(Graphics g) {
         g.setColor(Color.BLACK);
-        g.fillRect(x, y, width, height);
-        
+        g.fillRect((int)x, (int)y, width, height);
     }
 
-    // THIS method is required to remove projectiles off-screen
-    public boolean isOffScreen(int screenWidth) {
-        return x > screenWidth;
+    public boolean isOffScreen(int screenWidth, int screenHeight) {
+        return x < 0 || x > screenWidth || y < 0 || y > screenHeight;
+    }
+
+    public Rectangle getBounds() {
+        return new Rectangle((int)x, (int)y, width, height);
     }
 }
