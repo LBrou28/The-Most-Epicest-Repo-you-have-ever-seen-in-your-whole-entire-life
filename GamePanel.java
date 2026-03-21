@@ -1,10 +1,15 @@
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
+
 public class GamePanel extends JPanel implements Runnable {
+
+    BufferedImage chuck;
 
     Thread gameThread;
     boolean running;
@@ -13,6 +18,15 @@ public class GamePanel extends JPanel implements Runnable {
         this.setPreferredSize(new Dimension(800, 600));
         this.setBackground(Color.white);
         this.setDoubleBuffered(true);
+     try{
+        chuck = ImageIO.read(getClass().getResourceAsStream("/assets/Chuck.png"));
+     }catch (IOException e) {
+        e.printStackTrace();
+        
+    
+    }
+
+        
     }
 
     public void startgame() {
@@ -28,10 +42,5 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        g.setColor(Color.black);
-        g.fillRect(100, 100, 50, 50);
-    }
-
+   
 }
