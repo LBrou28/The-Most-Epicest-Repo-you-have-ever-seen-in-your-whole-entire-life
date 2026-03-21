@@ -36,6 +36,7 @@ public class GamePanel extends JPanel implements Runnable {
 
         try {
             chuck = ImageIO.read(new File("src/assets/Chuck.png"));
+            grass = ImageIO.read(new File( "src/assets/grass.jpg"));
         } catch (IOException e) {
             e.printStackTrace();
         }
