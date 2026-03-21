@@ -44,8 +44,8 @@ public abstract class Enemy {
         enemies.remove(enemy);
     }
    public static boolean checkCollision(ArrayList<Enemy> enemies, Player player) {
-    double playerXEnd = player.x + player.x;
-    double playerYEnd = player.y + player.y;
+    double playerXEnd = player.x + width;
+    double playerYEnd = player.y + height;
 
     for (int i = 0; i < enemies.size(); i++) {
         Enemy e = enemies.get(i);
