@@ -9,6 +9,7 @@ public class Game {
         frame.setSize(800, 600);
         frame.add(panel);
         frame.setVisible(true);
+        
 
         panel.startgame();
     }

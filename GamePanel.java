@@ -1,7 +1,9 @@
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -15,19 +17,17 @@ public class GamePanel extends JPanel implements Runnable {
     boolean running;
 
     public GamePanel() {
-        this.setPreferredSize(new Dimension(800, 600));
-        this.setBackground(Color.white);
-        this.setDoubleBuffered(true);
-     try{
-        chuck = ImageIO.read(getClass().getResourceAsStream("/assets/Chuck.png"));
-     }catch (IOException e) {
-        e.printStackTrace();
-        
-    
-    }
+    this.setPreferredSize(new Dimension(800, 600));
+    this.setBackground(Color.white);
+    this.setDoubleBuffered(true);
 
-        
+    try {
+        chuck = ImageIO.read(new File("src/assets/Chuck.png"));
+    } catch (IOException e) {
+        e.printStackTrace();
     }
+}
+
 
     public void startgame() {
         running = true;
@@ -36,11 +36,31 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     @Override
-    public void run() {
-        while (running) {
-            // game loop code here
+public void run() {
+    while (running) {
+        repaint();
+        try {
+            Thread.sleep(16);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
+
     }
+    
+}
+
+   @Override
+protected void paintComponent(Graphics g) {
+    super.paintComponent(g);
+
+
+    if (chuck != null) {
+        g.drawImage(chuck, 100, 100, 32, 32, null);
+    }
+    else{
+        System.out.println("yo code trash ma boy");
+    }
+}
 
    
 }
