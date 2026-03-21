@@ -1,10 +1,7 @@
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
+import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
@@ -38,12 +35,6 @@ public class GamePanel extends JPanel implements Runnable {
     @Override
 public void run() {
     while (running) {
-        repaint();
-        try {
-            Thread.sleep(16);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
 
     }
     
@@ -55,7 +46,7 @@ protected void paintComponent(Graphics g) {
 
 
     if (chuck != null) {
-        g.drawImage(chuck, 100, 100, 32, 32, null);
+        g.drawImage(chuck, 100, 100, 32, 64, null);
     }
     else{
         System.out.println("yo code trash ma boy");
