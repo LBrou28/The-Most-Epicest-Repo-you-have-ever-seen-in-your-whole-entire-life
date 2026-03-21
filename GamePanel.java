@@ -1,12 +1,12 @@
-import Entities.Player;
 import Entities.Enemies.*;
+import Entities.Player;
 import Input.InputHandler;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.util.*;
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import java.util.*;
 
 public class GamePanel extends JPanel implements Runnable {
 
