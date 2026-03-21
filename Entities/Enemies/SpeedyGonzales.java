@@ -1,17 +1,16 @@
 package Entities.Enemies;
+import Entities.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
-
-import Entities.*;
 
 public class SpeedyGonzales extends Enemy {
     
     public SpeedyGonzales() {
         super(Math.random() * 250, Math.random() * 250, 5, 5);
         enemyImage = setSprite();
-        width = enemyImage.getWidth();
-        height = enemyImage.getHeight();
+        width = enemyImage.getWidth()/8;
+        height = enemyImage.getHeight()/8;
     }
     
     public BufferedImage setSprite() {

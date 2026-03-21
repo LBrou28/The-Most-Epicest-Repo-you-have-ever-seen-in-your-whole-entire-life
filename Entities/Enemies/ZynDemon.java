@@ -1,12 +1,10 @@
 package Entities.Enemies;
 
+import Entities.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import javax.imageio.ImageIO;
-
-import Entities.*;
-
 import java.util.*;
+import javax.imageio.ImageIO;
 
 public class ZynDemon extends Enemy {
     
@@ -14,8 +12,8 @@ public class ZynDemon extends Enemy {
     public ZynDemon() {
         super(Math.random() * 250, Math.random() * 250, 5, 5);
         enemyImage = setSprite();
-        width = enemyImage.getWidth();
-        height = enemyImage.getHeight();
+        width = enemyImage.getWidth()/6;
+        height = enemyImage.getHeight()/6;
     }
 
     public void attack(Player player) { }

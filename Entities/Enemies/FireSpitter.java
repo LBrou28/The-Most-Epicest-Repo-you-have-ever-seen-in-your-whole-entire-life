@@ -1,17 +1,16 @@
 package Entities.Enemies;
+import Entities.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
-
-import Entities.*;
 
 public class FireSpitter extends Enemy {
     
     public FireSpitter() {
         super(Math.random() * 250, Math.random() * 250, 5, 5);
         enemyImage = setSprite();
-        width = enemyImage.getWidth()/6;
-        height = enemyImage.getHeight()/6;
+        width = enemyImage.getWidth()/16;
+        height = enemyImage.getHeight()/16;
     }
 
     public BufferedImage setSprite() {

@@ -7,7 +7,7 @@ import java.util.*;
 public abstract class Enemy {
     protected double xPos, yPos, damage, health, speed; 
 
-    protected static int width, height;
+    protected int width, height;
     boolean isAlive;
     BufferedImage enemyImage;
     ArrayList<Projectile> projectiles = new ArrayList<>();
@@ -17,6 +17,21 @@ public abstract class Enemy {
         this.damage = damage;
         this.health = health;
     }
+
+    public void update(Player player) {
+    double dx = player.x - xPos;
+    double dy = player.y - yPos;
+
+    double distance = Math.sqrt(dx * dx + dy * dy);
+
+    if (distance != 0) {
+        dx /= distance;
+        dy /= distance;
+
+        xPos += dx * speed;
+        yPos += dy * speed;
+    }
+}
 
     public Enemy() {}
     public void draw(Graphics g, Player player, int panelWidth, int panelHeight) {
