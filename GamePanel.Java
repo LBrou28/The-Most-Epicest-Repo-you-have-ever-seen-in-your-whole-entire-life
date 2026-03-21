@@ -4,7 +4,7 @@ import java.awt.Dimesion;
 
 import java.swing.JPanel;
 
-public class GamePanel extends Jpanel implements Runnable{
+public class Gamepanel extends Jpanel implements Runnable{
     //screen
     final int originalTileSize=16;
     final int scale=3;
@@ -17,7 +17,7 @@ public class GamePanel extends Jpanel implements Runnable{
 
     Thread gameThread;
 
-    public GamePanel(){
+    public Gamepanel(){
 
         this.setPreferredSize();
         this.setBackground(Color.black);
@@ -25,7 +25,8 @@ public class GamePanel extends Jpanel implements Runnable{
 
     }
 
-    public void startGameThread(){
+    public void startgame(){
+        running = true;
         gameThread = new Thread(this);
         gameThread.start();
 
