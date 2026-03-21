@@ -1,4 +1,4 @@
-
+import Entities.Player;
 import Input.InputHandler;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -6,7 +6,7 @@ import java.io.*;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
-public class GamePanel extends JPanel implements Runnable{
+public class GamePanel extends JPanel implements Runnable {
 
     BufferedImage chuck;
 
@@ -14,10 +14,7 @@ public class GamePanel extends JPanel implements Runnable{
     boolean running;
 
     private InputHandler input;
-
-    int chuckX = 100;
-    int chuckY = 100;
-    int speed = 3;
+    private Player player;
 
     public GamePanel() {
         this.setPreferredSize(new Dimension(800, 600));
@@ -27,6 +24,8 @@ public class GamePanel extends JPanel implements Runnable{
         input = new InputHandler();
         this.addKeyListener(input);
         this.setFocusable(true);
+
+        player = new Player(input);
 
         try {
             chuck = ImageIO.read(new File("src/assets/Chuck.png"));
@@ -41,23 +40,10 @@ public class GamePanel extends JPanel implements Runnable{
         gameThread.start();
     }
 
-     @Override
+    @Override
     public void run() {
         while (running) {
-
-            if (input.up) {
-                chuckY -= speed;
-            }
-            if (input.down) {
-                chuckY += speed;
-            }
-            if (input.left) {
-                chuckX -= speed;
-            }
-            if (input.right) {
-                chuckX += speed;
-            }
-
+            player.update();
             repaint();
 
             try {
@@ -67,22 +53,13 @@ public class GamePanel extends JPanel implements Runnable{
             }
         }
     }
-    
 
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
 
-   
-        @Override
-        protected void paintComponent(Graphics g) {
-            super.paintComponent(g);
-
-
-            if (chuck != null) {
-            g.drawImage(chuck, chuckX, chuckY, 32, 64, null);
+        if (chuck != null) {
+            g.drawImage(chuck, player.x, player.y, 32, 64, null);
         }
-        else{
-        System.out.println("yo code trash ma boy");
     }
-    
-    
-}
 }
