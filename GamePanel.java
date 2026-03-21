@@ -95,8 +95,9 @@ private void drawProjectiles(Graphics g) {
 public void drawEnemies(Graphics g) {
     for (int i = 0; i < enemies.size(); i++) {
         enemies.get(i).draw(g);
+        Enemy.checkCollision(enemies.get(i), player);
     }
-    Enemy.checkCollision(enemies, player);
+    
 }
 
 }

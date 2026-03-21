@@ -43,12 +43,12 @@ public abstract class Enemy {
     public void removeEnemy(ArrayList<Enemy> enemies, int enemy) {
         enemies.remove(enemy);
     }
-   public static boolean checkCollision(ArrayList<Enemy> enemies, Player player) {
-    double playerXEnd = player.x + width;
-    double playerYEnd = player.y + height;
+   public static boolean checkCollision(Enemy enemies, Player player) {
+    double playerXEnd = player.x + player.width;
+    double playerYEnd = player.y + player.height;
 
-    for (int i = 0; i < enemies.size(); i++) {
-        Enemy e = enemies.get(i);
+    
+        Enemy e = enemies;
 
         double eX = e.getX();
         double eY = e.getY();
@@ -62,7 +62,7 @@ public abstract class Enemy {
             System.out.println("Collision");
             return true;
         }
-    }
+    
     return false;
     }
     
