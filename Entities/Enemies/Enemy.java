@@ -1,7 +1,6 @@
 package Entities.Enemies;
 import Entities.Player;
 import java.awt.*;
-
 import java.awt.image.BufferedImage;
 import java.util.*;
 
@@ -11,6 +10,7 @@ public abstract class Enemy {
     protected static int width, height;
     boolean isAlive;
     BufferedImage enemyImage;
+
     
     public Enemy(double xPos, double yPos, double damage, double health) {
         this.xPos = xPos;
@@ -65,5 +65,4 @@ public abstract class Enemy {
     
     return false;
     }
-    
 }
