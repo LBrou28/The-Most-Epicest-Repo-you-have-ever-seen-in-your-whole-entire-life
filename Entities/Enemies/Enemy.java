@@ -1,8 +1,6 @@
 package Entities.Enemies;
 
 import java.awt.*;
-import java.util.*;
-
 import java.awt.image.BufferedImage;
 
 
