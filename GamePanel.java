@@ -56,7 +56,6 @@ public class GamePanel extends JPanel implements Runnable {
             for (int i = 0; i < projectiles.size(); i++) {
                 Projectile p = projectiles.get(i);
                 p.update();
-
                 // Remove if off-screen
                 if (p.isOffScreen(this.getWidth())) {
                     projectiles.remove(i);
@@ -80,7 +79,7 @@ public class GamePanel extends JPanel implements Runnable {
         g.drawImage(chuck, player.x, player.y, player.width, player.height, null);
         drawEnemies(g);
         drawProjectiles(g); //draw my projectiles
-    } else{
+    } else {
         System.out.println("yo code trash ma boy");
     }
 }
@@ -89,6 +88,7 @@ public class GamePanel extends JPanel implements Runnable {
 private void drawProjectiles(Graphics g) {
     for (Projectile p : projectiles) {
         p.draw(g);
+        p.checkCollision(player);
     }
 }
 
