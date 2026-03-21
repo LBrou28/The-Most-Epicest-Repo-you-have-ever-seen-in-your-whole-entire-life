@@ -42,6 +42,8 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void startgame() {
         enemies.add(new ZynDemon());
+        enemies.add(new FireSpitter());
+        enemies.add(new SpeedyGonzales());
         running = true;
         gameThread = new Thread(this);
         gameThread.start();
@@ -88,14 +90,15 @@ public class GamePanel extends JPanel implements Runnable {
 private void drawProjectiles(Graphics g) {
     for (Projectile p : projectiles) {
         p.draw(g);
-        p.checkCollision(player);
     }
 }
 
 public void drawEnemies(Graphics g) {
     for (int i = 0; i < enemies.size(); i++) {
-        enemies.get(i).draw(g);
+        enemies.get(i).draw(g, player);
+        enemies.get(i).attack(player);
         Enemy.checkCollision(enemies.get(i), player);
+        
     }
     
 }

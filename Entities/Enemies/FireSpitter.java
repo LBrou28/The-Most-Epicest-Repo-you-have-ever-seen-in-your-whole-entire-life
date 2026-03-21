@@ -1,32 +1,32 @@
 package Entities.Enemies;
-
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import Entities.*;
 
-import java.util.*;
-
-public class ZynDemon extends Enemy {
+public class FireSpitter extends Enemy {
     
-    ArrayList<Projectile> projectiles = new ArrayList<>();
-    public ZynDemon() {
+    public FireSpitter() {
         super(Math.random() * 250, Math.random() * 250, 5, 5);
         enemyImage = setSprite();
-        width = enemyImage.getWidth();
-        height = enemyImage.getHeight();
+        width = enemyImage.getWidth()/6;
+        height = enemyImage.getHeight()/6;
     }
-
-    public void attack(Player player) { }
 
     public BufferedImage setSprite() {
         BufferedImage enemy = null;
         try {
-        enemy = ImageIO.read(getClass().getResourceAsStream("EnemyImages/sadness.png"));
+        enemy = ImageIO.read(getClass().getResourceAsStream("EnemyImages/demon.png"));
         }   catch (IOException e) {
         e.printStackTrace();
         }
         return enemy;
     }
+
+    public void attack(Player player) {
+        projectiles.add(new Projectile((int) xPos, (int) yPos)); 
+    }
+
+    
 }

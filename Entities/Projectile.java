@@ -21,7 +21,6 @@ public class Projectile {
     public void draw(Graphics g) {
         g.setColor(Color.BLACK);
         g.fillRect(x, y, width, height);
-        
     }
 
     // THIS method is required to remove projectiles off-screen
@@ -29,25 +28,10 @@ public class Projectile {
         return x > screenWidth;
     }
 
-    public boolean checkCollision(Player player) {
-        double playerXEnd = player.x + player.width;
-        double playerYEnd = player.y + player.height;
-        
-
-        
-        double xEnd = x + width;
-        double yEnd = y + height;
-
-        boolean overlapX = player.x < xEnd && playerXEnd > x;
-        boolean overlapY = player.y < yEnd && playerYEnd > y;
-
-        if (overlapX && overlapY) {
-            System.out.println("Collision");
-            return true;
-        }
-
-    
-
-        return false;
+    public boolean checkBulletCollision(Player player) {
+    return x < player.x + player.width &&
+           x + width > player.x &&
+           y < player.y + player.height &&
+           y + height > player.y;
     }
 }
