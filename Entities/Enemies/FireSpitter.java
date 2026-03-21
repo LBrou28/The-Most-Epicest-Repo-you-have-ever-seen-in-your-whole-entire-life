@@ -25,7 +25,7 @@ public class FireSpitter extends Enemy {
     }
 
     public void attack(Player player) {
-        projectiles.add(new Projectile((int) xPos, (int) yPos)); 
+        projectiles.add(new Projectile((int) xPos, (int) yPos, width, height)); 
     }
 
     

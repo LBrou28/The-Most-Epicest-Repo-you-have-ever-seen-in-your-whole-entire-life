@@ -26,4 +26,5 @@ public class SpeedyGonzales extends Enemy {
     public void attack(Player player) {
 
     }
+
 }
