@@ -82,8 +82,24 @@ protected void paintComponent(Graphics g) {
     int centerY = getHeight() / 2;
 
     if (grass != null) {
-        g.drawImage(grass, (int)(-player.x + centerX), (int)(-player.y + centerY), null);
+    double scale = 0.5; //smaller = more zoomed out
+
+    int tileWidth = (int)(grass.getWidth() * scale);
+    int tileHeight = (int)(grass.getHeight() * scale);
+
+    int offsetX = (int)(-player.x * scale + centerX) % tileWidth;
+    int offsetY = (int)(-player.y * scale + centerY) % tileHeight;
+
+    if (offsetX > 0) offsetX -= tileWidth;
+    if (offsetY > 0) offsetY -= tileHeight;
+
+    for (int x = offsetX; x < getWidth(); x += tileWidth) {
+        for (int y = offsetY; y < getHeight(); y += tileHeight) {
+            g.drawImage(grass, x, y, tileWidth, tileHeight, null);
+        }
     }
+}
+
 
     for (Enemy e : enemies) {
     e.draw(g, player, getWidth(), getHeight());
@@ -98,7 +114,7 @@ protected void paintComponent(Graphics g) {
     }
 
     if (chuck != null) {
-        g.drawImage(chuck, centerX - 16, centerY - 32, 32, 64, null);
+        g.drawImage(chuck, centerX - 16, centerY - 32, 50, 90, null);
     }
 }
 }

@@ -1,7 +1,6 @@
 package Entities;
 import java.awt.*;
 
-import Entities.Enemies.Enemy;
 public class Projectile {
 
     public double x, y;
