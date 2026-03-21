@@ -5,6 +5,12 @@ import Input.InputHandler;
 import java.util.ArrayList;
 
 public class Player {
+<<<<<<< HEAD
+=======
+    public int x, y, width = 40, height = 80;
+    int speed = 3;
+    double dashSpeed = 10;
+>>>>>>> eb13a574ef3175428bd7a7009c1e4d0efd4a0111
 
     public int x = 100, y = 100;
 
