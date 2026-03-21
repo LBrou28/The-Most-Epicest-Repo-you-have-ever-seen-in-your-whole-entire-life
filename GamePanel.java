@@ -61,7 +61,7 @@ public class GamePanel extends JPanel implements Runnable {
     protected void paintComponent(Graphics g) {
     super.paintComponent(g);
     if (chuck != null) {
-        g.drawImage(chuck, 100, 100, 32, 64, null);
+        g.drawImage(chuck, player.x, player.y, 40, 80, null);
         drawEnemies(g);
     } else{
         System.out.println("yo code trash ma boy");
