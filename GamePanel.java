@@ -1,5 +1,6 @@
 import Entities.Enemies.*;
 import Entities.Player;
+import Entities.Projectile;
 import Input.InputHandler;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -17,6 +18,7 @@ public class GamePanel extends JPanel implements Runnable {
     ArrayList<Enemy> enemies = new ArrayList<>();
     private InputHandler input;
     private Player player;
+     private ArrayList<Projectile> projectiles = new ArrayList<>();
 
     public GamePanel() {
         this.setPreferredSize(new Dimension(800, 600));
@@ -27,7 +29,9 @@ public class GamePanel extends JPanel implements Runnable {
         this.addKeyListener(input);
         this.setFocusable(true);
 
-        player = new Player(input);
+        SwingUtilities.invokeLater(() -> requestFocusInWindow());
+
+        player = new Player(input, projectiles);
 
         try {
             chuck = ImageIO.read(new File("src/assets/Chuck.png"));
@@ -47,6 +51,18 @@ public class GamePanel extends JPanel implements Runnable {
     public void run() {
         while (running) {
             player.update();
+
+            // Update projectiles
+            for (int i = 0; i < projectiles.size(); i++) {
+                Projectile p = projectiles.get(i);
+                p.update();
+
+                // Remove if off-screen
+                if (p.isOffScreen(this.getWidth())) {
+                    projectiles.remove(i);
+                    i--;
+                }
+            }
             repaint();
 
             try {
@@ -63,8 +79,16 @@ public class GamePanel extends JPanel implements Runnable {
     if (chuck != null) {
         g.drawImage(chuck, player.x, player.y, player.width, player.height, null);
         drawEnemies(g);
+        drawProjectiles(g); //draw my projectiles
     } else{
         System.out.println("yo code trash ma boy");
+    }
+}
+
+//method for projectiles
+private void drawProjectiles(Graphics g) {
+    for (Projectile p : projectiles) {
+        p.draw(g);
     }
 }
 
