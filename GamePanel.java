@@ -11,15 +11,16 @@ import javax.swing.*;
 
 public class GamePanel extends JPanel implements Runnable {
 
-    BufferedImage chuck;
-    BufferedImage grass;
+    BufferedImage chuck, grass;
 
     Thread gameThread;
     boolean running;
+
     ArrayList<Enemy> enemies = new ArrayList<>();
+    ArrayList<Projectile> projectiles = new ArrayList<>();
+
     private InputHandler input;
     private Player player;
-     private ArrayList<Projectile> projectiles = new ArrayList<>();
 
     public GamePanel() {
         this.setPreferredSize(new Dimension(800, 600));
@@ -29,14 +30,9 @@ public class GamePanel extends JPanel implements Runnable {
         input = new InputHandler();
         this.addKeyListener(input);
         this.setFocusable(true);
-
         SwingUtilities.invokeLater(() -> requestFocusInWindow());
 
-<<<<<<< HEAD
         player = new Player(input, projectiles, enemies);
-=======
-        player = new Player(input, projectiles, enemies); 
->>>>>>> e619941eb915fa528479466d1518fb933cef46e8
 
         try {
             chuck = ImageIO.read(new File("src/assets/Chuck.png"));
@@ -48,10 +44,6 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void startgame() {
         enemies.add(new ZynDemon());
-        enemies.add(new ZynDemon());
-        enemies.add(new ZynDemon());
-        enemies.add(new ZynDemon());
-        enemies.add(new ZynDemon());
         running = true;
         gameThread = new Thread(this);
         gameThread.start();
@@ -60,74 +52,47 @@ public class GamePanel extends JPanel implements Runnable {
     @Override
     public void run() {
         while (running) {
+
             player.update();
 
-            // Update projectiles
             for (int i = 0; i < projectiles.size(); i++) {
-            Projectile p = projectiles.get(i);
-            p.update();
+                Projectile p = projectiles.get(i);
+                p.update();
 
-<<<<<<< HEAD
                 if (p.isOffScreen(player.x, player.y, getWidth(), getHeight())) {
-                projectiles.remove(i);
-                i--;
-=======
-                // Remove if off-screen
-                if (p.isOffScreen(this.getWidth(), this.getHeight())) {
                     projectiles.remove(i);
                     i--;
->>>>>>> e619941eb915fa528479466d1518fb933cef46e8
                 }
-            }   
+            }
+
             repaint();
 
-            try {
-                Thread.sleep(16);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            try { Thread.sleep(16); }
+            catch (InterruptedException e) { e.printStackTrace(); }
         }
     }
-    
+
     @Override
     protected void paintComponent(Graphics g) {
-    super.paintComponent(g);
+        super.paintComponent(g);
 
-    int centerX = getWidth() / 2;
-    int centerY = getHeight() / 2;
+        int centerX = getWidth() / 2;
+        int centerY = getHeight() / 2;
 
-    if (grass != null) {
-        g.drawImage(grass, (int)(-player.x + centerX), (int)(-player.y + centerY), null);
+        if (grass != null) {
+            g.drawImage(grass, (int)(-player.x + centerX), (int)(-player.y + centerY), null);
+        }
+
+        for (Enemy e : enemies) {
+            e.draw(g, player.x, player.y, centerX, centerY);
+        }
+
+        for (Projectile p : projectiles) {
+            p.draw(g, player.x, player.y, centerX, centerY);
+        }
+
+        if (chuck != null) {
+            g.drawImage(chuck, centerX - 16, centerY - 32, 32, 64, null);
+        }
     }
-
-
-    if (chuck != null) {
-        g.drawImage(chuck, centerX - 16, centerY - 32, 32, 64, null);
-        drawEnemies(g);
-        drawProjectiles(g); //draw my projectiles
-    } else{
-        System.out.println("yo code trash ma boy");
-    }
-}
-
-//method for projectiles
-private void drawProjectiles(Graphics g) {
-    int centerX = getWidth() / 2;
-    int centerY = getHeight() / 2;
-
-    for (Projectile p : projectiles) {
-        p.draw(g, player.x, player.y, centerX, centerY);
-    }
-}
-
-public void drawEnemies(Graphics g) {
-    int centerX = getWidth() / 2;
-    int centerY = getHeight() / 2;
-
-    for (int i = 0; i < enemies.size(); i++) {
-        enemies.get(i).draw(g, player.x, player.y, centerX, centerY);
-        Enemy.checkCollision(enemies.get(i), player);
-    }
-}
-
 }
