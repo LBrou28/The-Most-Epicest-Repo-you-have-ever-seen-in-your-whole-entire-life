@@ -1,11 +1,14 @@
 package Entities;
 import Input.InputHandler;
+import java.util.ArrayList;
 
 
 public class Player {
     public int x, y;
     int speed = 3;
     double dashSpeed = 10;
+
+    ArrayList<Projectile> projectiles;
 
     boolean isDashing = false;
     long dashTime = 0;
@@ -16,8 +19,9 @@ public class Player {
 
     InputHandler input;
 
-    public Player(InputHandler input) {
+    public Player(InputHandler input, ArrayList<Projectile> projectiles) {
         this.input = input;
+        this.projectiles = projectiles;
         x = 100;
         y = 100;
     }
@@ -31,6 +35,12 @@ public class Player {
     if (input.down) dy += 1;
     if (input.left) dx -= 1;
     if (input.right) dx += 1;
+
+    //for projectiles
+    if (input.shoot) {
+            shoot();
+            input.shoot = false; // prevent continuous shooting
+        }
 
     long currentTime = System.currentTimeMillis();
 
@@ -57,4 +67,9 @@ public class Player {
         y += dy * currentSpeed;
     }
 }
+
+private void shoot() {
+        // Spawn projectile at player's position
+        projectiles.add(new Projectile(x + 16, y + 16)); 
+    }
 }
