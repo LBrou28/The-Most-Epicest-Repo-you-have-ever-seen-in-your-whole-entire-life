@@ -32,7 +32,7 @@ public class GamePanel extends JPanel implements Runnable {
 
         SwingUtilities.invokeLater(() -> requestFocusInWindow());
 
-        player = new Player(input, projectiles);
+        player = new Player(input, projectiles, enemies);
 
         try {
             chuck = ImageIO.read(new File("src/assets/Chuck.png"));
@@ -56,15 +56,14 @@ public class GamePanel extends JPanel implements Runnable {
 
             // Update projectiles
             for (int i = 0; i < projectiles.size(); i++) {
-                Projectile p = projectiles.get(i);
-                p.update();
+            Projectile p = projectiles.get(i);
+            p.update();
 
-                // Remove if off-screen
-                if (p.isOffScreen(this.getWidth())) {
-                    projectiles.remove(i);
-                    i--;
+                if (p.isOffScreen(player.x, player.y, getWidth(), getHeight())) {
+                projectiles.remove(i);
+                i--;
                 }
-            }
+            }   
             repaint();
 
             try {
@@ -98,17 +97,22 @@ public class GamePanel extends JPanel implements Runnable {
 
 //method for projectiles
 private void drawProjectiles(Graphics g) {
+    int centerX = getWidth() / 2;
+    int centerY = getHeight() / 2;
+
     for (Projectile p : projectiles) {
-        p.draw(g);
+        p.draw(g, player.x, player.y, centerX, centerY);
     }
 }
 
 public void drawEnemies(Graphics g) {
+    int centerX = getWidth() / 2;
+    int centerY = getHeight() / 2;
+
     for (int i = 0; i < enemies.size(); i++) {
-        enemies.get(i).draw(g);
+        enemies.get(i).draw(g, player.x, player.y, centerX, centerY);
         Enemy.checkCollision(enemies.get(i), player);
     }
-    
 }
 
 }
