@@ -1,10 +1,12 @@
 import Entities.Player;
+import Entities.Enemies.*;
 import Input.InputHandler;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import java.util.*;
 
 public class GamePanel extends JPanel implements Runnable {
 
@@ -12,7 +14,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     Thread gameThread;
     boolean running;
-
+    ArrayList<Enemy> enemies = new ArrayList<>();
     private InputHandler input;
     private Player player;
 
@@ -35,6 +37,7 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void startgame() {
+        enemies.add(new ZynDemon());
         running = true;
         gameThread = new Thread(this);
         gameThread.start();
@@ -53,13 +56,50 @@ public class GamePanel extends JPanel implements Runnable {
             }
         }
     }
-
+    
     @Override
     protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-
-        if (chuck != null) {
-            g.drawImage(chuck, player.x, player.y, 32, 64, null);
-        }
+    super.paintComponent(g);
+    if (chuck != null) {
+        g.drawImage(chuck, 100, 100, 32, 64, null);
+        drawEnemies(g);
+    } else{
+        System.out.println("yo code trash ma boy");
     }
 }
+
+public void drawEnemies(Graphics g) {
+    for (int i = 0; i < enemies.size(); i++) {
+        enemies.get(i).draw(g);
+    }
+}
+
+}
+/*
+ArrayList<Enemy> enemies = new ArrayList<>();
+   @Override
+protected void paintComponent(Graphics g) {
+    super.paintComponent(g);
+
+
+    if (chuck != null) {
+        g.drawImage(chuck, 100, 100, 32, 64, null);
+        drawEnemies(g);
+        
+    } else{
+        System.out.println("yo code trash ma boy");
+    }
+    
+    
+}
+
+public void drawEnemies(Graphics g) {
+    for (int i = 0; i < enemies.size(); i++) {
+        enemies.get(i).draw(g);
+    }
+}
+
+   
+}
+
+*/

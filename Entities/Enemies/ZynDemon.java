@@ -12,23 +12,21 @@ public class ZynDemon extends Enemy {
     
      
     public ZynDemon() {
-        super(5, 5, 5, 5);
+        super(Math.random() * 500, Math.random() * 500, 5, 5);
         enemyImage = setSprite();
     }
 
     public void attack() { }
+
     public BufferedImage setSprite() {
         BufferedImage enemy = null;
         try {
-        enemy = ImageIO.read(getClass().getResourceAsStream("EnemyImages/Zyn.jpg"));
+        enemy = ImageIO.read(getClass().getResourceAsStream("EnemyImages/sadghost.png"));
         }   catch (IOException e) {
         e.printStackTrace();
         }
-        if (enemy == null) {
-        System.out.println("Its null");
-        }
         return enemy;
     }
-    
+   
 
 }

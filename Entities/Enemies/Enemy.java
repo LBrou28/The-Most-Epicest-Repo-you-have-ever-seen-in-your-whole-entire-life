@@ -19,12 +19,13 @@ public abstract class Enemy {
         this.damage = damage;
         this.health = health;
     }
-
-    public void draw(Graphics g, ArrayList<Enemy> enemies) {
-        for(int i = 0; i < enemies.size(); i++) {
-            //g.drawImage(enemyImage, (int)xPos, (int)yPos, null);
-            g.drawImage(enemyImage, (int)50, (int)50, 100, 100, null);
-        }
+    public Enemy() {}
+    public void draw(Graphics g) {
+            g.drawImage(enemyImage, (int)xPos, (int)yPos, null);
+    }
+    
+    public BufferedImage getSprite() {
+        return enemyImage;
     }
 
     public abstract void attack(); 
