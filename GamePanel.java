@@ -1,5 +1,7 @@
 import Entities.Enemies.*;
 import Entities.Player;
+import Entities.PowerUp;
+import Entities.PowerUpType;
 import Entities.Projectile;
 import Input.InputHandler;
 import java.awt.*;
@@ -18,6 +20,11 @@ public class GamePanel extends JPanel implements Runnable {
 
     ArrayList<Enemy> enemies = new ArrayList<>();
     ArrayList<Projectile> projectiles = new ArrayList<>();
+    ArrayList<PowerUp> powerUps = new ArrayList<>();
+
+    long lastPowerUpSpawnTime = 0;
+    long powerUpSpawnCooldown = 8000;
+    Random random = new Random();
 
     private InputHandler input;
     private Player player;
@@ -51,38 +58,65 @@ public class GamePanel extends JPanel implements Runnable {
         gameThread.start();
     }
 
+    private void spawnRandomPowerUp() {
+    PowerUpType[] types = PowerUpType.values();
+    PowerUpType randomType = types[random.nextInt(types.length)];
+
+    double spawnX = player.x + random.nextInt(401) - 200;
+    double spawnY = player.y + random.nextInt(401) - 200;
+
+    powerUps.add(new PowerUp(spawnX, spawnY, randomType));
+    }
+
     @Override
-    public void run() {
-        while (running) {
+public void run() {
+    while (running) {
 
-            player.update();
+        player.update();
 
-            for (Enemy e : enemies) {
-                e.update(player);
-            }
+        long currentTime = System.currentTimeMillis();
 
-            separateEnemiesFromPlayer();
-            separateEnemies();
+        if (currentTime - lastPowerUpSpawnTime > powerUpSpawnCooldown) {
+            spawnRandomPowerUp();
+            lastPowerUpSpawnTime = currentTime;
+        }
 
-            for (int i = 0; i < projectiles.size(); i++) {
-                Projectile p = projectiles.get(i);
-                p.update();
+        for (int i = 0; i < powerUps.size(); i++) {
+            PowerUp p = powerUps.get(i);
 
-                if (p.isOffScreen(player.x, player.y, getWidth(), getHeight())) {
-                    projectiles.remove(i);
-                    i--;
-                }
-            }
-
-            repaint();
-
-            try {
-                Thread.sleep(16);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            if (p.collidesWith(player)) {
+                p.apply(player);
+                powerUps.remove(i);
+                i--;
             }
         }
+
+        for (Enemy e : enemies) {
+            e.update(player);
+        }
+
+        separateEnemiesFromPlayer();
+        separateEnemies();
+
+        for (int i = 0; i < projectiles.size(); i++) {
+            Projectile p = projectiles.get(i);
+            p.update();
+
+            if (p.isOffScreen(player.x, player.y, getWidth(), getHeight())) {
+                projectiles.remove(i);
+                i--;
+            }
+        }
+
+        repaint();
+
+        try {
+            Thread.sleep(16);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
+}
 
     private void separateEnemiesFromPlayer() {
         for (Enemy e : enemies) {
@@ -97,7 +131,7 @@ public class GamePanel extends JPanel implements Runnable {
 
             double distance = Math.sqrt(dx * dx + dy * dy);
 
-            double minDistance = (e.getWidth() + player.width) / 2.0;
+            double minDistance = (e.getWidth() + player.width) / 2.0 - 15;
 
             if (distance == 0) {
                 dx = 1;
@@ -158,41 +192,59 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
+protected void paintComponent(Graphics g) {
+    super.paintComponent(g);
 
-        int centerX = getWidth() / 2;
-        int centerY = getHeight() / 2;
+    int centerX = getWidth() / 2;
+    int centerY = getHeight() / 2;
 
-        if (grass != null) {
-            double scale = 0.75;
+    if (grass != null) {
+        double scale = 0.5;
 
-            int tileWidth = (int) (grass.getWidth() * scale);
-            int tileHeight = (int) (grass.getHeight() * scale);
+        int tileWidth = (int) (grass.getWidth() * scale);
+        int tileHeight = (int) (grass.getHeight() * scale);
 
-            int offsetX = (int) (-player.x * scale + centerX) % tileWidth;
-            int offsetY = (int) (-player.y * scale + centerY) % tileHeight;
+        int offsetX = (int) (-player.x * scale + centerX) % tileWidth;
+        int offsetY = (int) (-player.y * scale + centerY) % tileHeight;
 
-            if (offsetX > 0) offsetX -= tileWidth;
-            if (offsetY > 0) offsetY -= tileHeight;
+        if (offsetX > 0) offsetX -= tileWidth;
+        if (offsetY > 0) offsetY -= tileHeight;
 
-            for (int x = offsetX; x < getWidth(); x += tileWidth) {
-                for (int y = offsetY; y < getHeight(); y += tileHeight) {
-                    g.drawImage(grass, x, y, tileWidth, tileHeight, null);
-                }
+        for (int x = offsetX; x < getWidth(); x += tileWidth) {
+            for (int y = offsetY; y < getHeight(); y += tileHeight) {
+                g.drawImage(grass, x, y, tileWidth, tileHeight, null);
             }
         }
+    }
 
-        for (Enemy e : enemies) {
-            e.draw(g, player, getWidth(), getHeight());
-        }
+    for (Enemy e : enemies) {
+        e.draw(g, player, getWidth(), getHeight());
 
-        for (Projectile p : projectiles) {
-            p.draw(g, player.x, player.y, centerX, centerY);
-        }
-
-        if (chuck != null) {
-            g.drawImage(chuck, centerX - 16, centerY - 32, 50, 90, null);
+        if (Enemy.checkCollision(e, player)) {
+            System.out.println("collision located");
         }
     }
+
+    for (PowerUp p : powerUps) {
+        p.draw(g, player.x, player.y, centerX, centerY);
+    }
+
+    for (Projectile p : projectiles) {
+    p.draw(g, player.x, player.y, centerX, centerY);
+}
+
+
+    Graphics2D g2 = (Graphics2D) g;
+    g2.setColor(new Color(100, 100, 100, 80));
+
+    int radius = (int) player.getShootRadius();
+    int diameter = radius * 2;
+
+    g2.fillOval(centerX - radius, centerY - radius, diameter, diameter);
+
+    
+    if (chuck != null) {
+    g.drawImage(chuck, centerX - 16, centerY - 32, 50, 90, null);
+    }
+}
 }
