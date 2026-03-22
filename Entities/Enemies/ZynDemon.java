@@ -31,7 +31,7 @@ public class ZynDemon extends Enemy {
 
     private BufferedImage setSprite() {
         try {
-            return ImageIO.read(getClass().getResourceAsStream("EnemyImages/Zyn.jpg"));
+            return ImageIO.read(getClass().getResourceAsStream("EnemyImages/Witch.png"));
         } catch (IOException e) {
             e.printStackTrace();
             return null;

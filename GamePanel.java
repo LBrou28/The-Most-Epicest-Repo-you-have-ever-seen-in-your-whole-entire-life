@@ -346,10 +346,10 @@ public void run() {
 
         // text
         g4.drawString((i+1) + ": " + up.name, boxX + 10, boxY + 30);
-        g4.setFont(new Font("Arial", Font.PLAIN, 14));
+        g4.setFont(new Font("Comic Sans MS", Font.PLAIN, 14));
         g4.drawString(up.description, boxX + 10, boxY + 60);
 
-        g4.setFont(new Font("Arial", Font.BOLD, 20));
+        g4.setFont(new Font("Comic Sans MS", Font.BOLD, 20));
         }
     }
 
@@ -364,14 +364,14 @@ public void run() {
     g3.fillRect(0, 0, getWidth(), getHeight());
 
     g3.setColor(Color.RED);
-    g3.setFont(new Font("Arial", Font.BOLD, 50));
+    g3.setFont(new Font("Comic Sans MS", Font.BOLD, 50));
 
     String text = "Chuck lost his balance...\r\n" +"\r\n" + "But growth is never linear.\r\n" + "\r\n" + "Press R to continue the journey.";
     int textWidth = g3.getFontMetrics().stringWidth(text);
 
     g3.drawString(text, getWidth()/2 - textWidth/2, getHeight()/2 - 20);
 
-    g3.setFont(new Font("Arial", Font.BOLD, 20));
+    g3.setFont(new Font("Comic Sans MS", Font.BOLD, 20));
     String restart = "Press R to Restart";
     int rWidth = g3.getFontMetrics().stringWidth(restart);
 

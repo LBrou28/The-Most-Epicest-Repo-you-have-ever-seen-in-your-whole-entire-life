@@ -53,7 +53,7 @@ public class PERMA {
         g.drawRect(x, y, width, height);
 
         g.setColor(Color.WHITE);
-        g.setFont(new Font("Arial", Font.BOLD, 10));
+        g.setFont(new Font("Comic Sans MS", Font.BOLD, 10));
         g.drawString(label + ": " + value, x + width + 10, y + height);
     }
         public boolean isMaxed() {
