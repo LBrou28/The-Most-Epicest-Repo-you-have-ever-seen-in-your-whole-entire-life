@@ -325,7 +325,6 @@ public void run() {
     if (choosingUpgrade) {
     Graphics2D g4 = (Graphics2D) g;
 
-    // dark overlay
     g4.setColor(new Color(0, 0, 0, 200));
     g4.fillRect(0, 0, getWidth(), getHeight());
 
@@ -337,14 +336,12 @@ public void run() {
         int boxX = 150 + i * 200;
         int boxY = getHeight() / 2 - 50;
 
-        // box
         g4.setColor(Color.GRAY);
         g4.fillRect(boxX, boxY, 150, 100);
 
         g4.setColor(Color.WHITE);
         g4.drawRect(boxX, boxY, 150, 100);
 
-        // text
         g4.drawString((i+1) + ": " + up.name, boxX + 10, boxY + 30);
         g4.setFont(new Font("Comic Sans MS", Font.PLAIN, 14));
         g4.drawString(up.description, boxX + 10, boxY + 60);
@@ -364,18 +361,24 @@ public void run() {
     g3.fillRect(0, 0, getWidth(), getHeight());
 
     g3.setColor(Color.RED);
-    g3.setFont(new Font("Comic Sans MS", Font.BOLD, 50));
+    g3.setFont(new Font("Arial", Font.BOLD, 40));
 
-    String text = "Chuck lost his balance...\r\n" +"\r\n" + "But growth is never linear.\r\n" + "\r\n" + "Press R to continue the journey.";
-    int textWidth = g3.getFontMetrics().stringWidth(text);
+    String text = "Balance Has Been Lost";
 
-    g3.drawString(text, getWidth()/2 - textWidth/2, getHeight()/2 - 20);
+    FontMetrics fm = g3.getFontMetrics();
+    int x = (getWidth() - fm.stringWidth(text)) / 2;
+    int y = getHeight() / 2 - 20;
+
+    g3.drawString(text, x, y);
 
     g3.setFont(new Font("Comic Sans MS", Font.BOLD, 20));
-    String restart = "Press R to Restart";
-    int rWidth = g3.getFontMetrics().stringWidth(restart);
 
-    g3.drawString(restart, getWidth()/2 - rWidth/2, getHeight()/2 + 20);
+    String restart = "Press R to Restore Balance";
+
+    FontMetrics fm3 = g3.getFontMetrics();
+    int x3 = (getWidth() - fm3.stringWidth(restart)) / 2;
+
+    g3.drawString(restart, x3, y + 40);
     }
     
 }
