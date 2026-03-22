@@ -3,6 +3,7 @@ import Entities.Player;
 import Entities.PowerUp;
 import Entities.PowerUpType;
 import Entities.Projectile;
+import Entities.PlayerHealth;
 import Input.InputHandler;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -10,6 +11,7 @@ import java.io.*;
 import java.util.*;
 import javax.imageio.ImageIO;
 import javax.swing.*;
+
 public class GamePanel extends JPanel implements Runnable {
 
     BufferedImage chuck, grass;

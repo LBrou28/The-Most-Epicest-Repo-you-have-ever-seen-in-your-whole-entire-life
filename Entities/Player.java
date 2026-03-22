@@ -194,6 +194,8 @@ public void setDamage(double damage) {
     this.damage = damage;
 }
 
-
+public PlayerHealth getHealth() {
+    return getHealth();
+}
 
 }
