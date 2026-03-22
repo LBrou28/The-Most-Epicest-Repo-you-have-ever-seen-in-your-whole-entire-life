@@ -7,26 +7,27 @@ import java.util.ArrayList;
 public class Player {
 
     public int x, y, width = 32, height = 64;
-    int speed = 3;
-    double dashSpeed = 10;
+        double speed = 3;
+        double dashSpeed = 10;
 
     private PlayerHealth health = new PlayerHealth(100);
 
     ArrayList<Projectile> projectiles;
     ArrayList<Enemy> enemies;
 
-    boolean isDashing = false;
-    long dashTime = 0;
-    long dashDuration = 150;
+        boolean isDashing = false;
+        long dashTime = 0;
+        long dashDuration = 150;
 
-    long lastDashTime = 0;
-    long dashCooldown = 500;
+        long lastDashTime = 0;
+        long dashCooldown = 500;
 
-    long lastShotTime = 0;
-    long shootCooldown = 500;
-    double shootRadius = 250;
+        long lastShotTime = 0;
+        long shootCooldown = 500;
+        double shootRadius = 250;
+        double damage = 1;
 
-    InputHandler input;
+        InputHandler input;
 
     public Player(InputHandler input, ArrayList<Projectile> projectiles, ArrayList<Enemy> enemies) {
         this.input = input;
@@ -161,7 +162,38 @@ public class Player {
     }
 }
 
-public PlayerHealth getHealth() {
-        return health;
-    }
+public double getSpeed() {
+    return speed;
+}
+
+public void setSpeed(double speed) {
+    this.speed = speed;
+}
+
+public long getShootCooldown() {
+    return shootCooldown;
+}
+
+public void setShootCooldown(long shootCooldown) {
+    this.shootCooldown = shootCooldown;
+}
+
+public double getShootRadius() {
+    return shootRadius;
+}
+
+public void setShootRadius(double shootRadius) {
+    this.shootRadius = shootRadius;
+}
+
+public double getDamage() {
+    return damage;
+}
+
+public void setDamage(double damage) {
+    this.damage = damage;
+}
+
+
+
 }
