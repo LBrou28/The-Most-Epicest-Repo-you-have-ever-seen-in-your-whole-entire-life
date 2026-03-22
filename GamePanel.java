@@ -248,7 +248,7 @@ protected void paintComponent(Graphics g) {
     g.drawImage(chuck, centerX - 16, centerY - 32, 50, 90, null);
     }
 
-    // ✅ UI (always draw last)
+    // UI 
     player.getHealth().draw(g);
     if (chuck != null) {
     g.drawImage(chuck, centerX - 16, centerY - 32, 50, 90, null);
