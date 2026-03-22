@@ -4,6 +4,8 @@ import java.awt.*;
 
 public class PERMA {
 
+    
+
     public int P = 50;
     public int E = 50;
     public int R = 50;
@@ -53,5 +55,8 @@ public class PERMA {
         g.setColor(Color.WHITE);
         g.setFont(new Font("Arial", Font.BOLD, 10));
         g.drawString(label + ": " + value, x + width + 10, y + height);
+    }
+        public boolean isMaxed() {
+            return P >= 100 && E >= 100 && R >= 100 && M >= 100 && A >= 100;
     }
 }

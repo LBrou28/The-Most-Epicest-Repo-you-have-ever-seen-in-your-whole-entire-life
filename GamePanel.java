@@ -41,6 +41,8 @@ public class GamePanel extends JPanel implements Runnable {
     private boolean choosingUpgrade = false;
     private ArrayList<Upgrade> currentUpgrades = new ArrayList<>();
 
+    private boolean gameWon = false;
+
     public GamePanel() {
         this.setPreferredSize(new Dimension(800, 600));
         this.setBackground(Color.white);
@@ -85,9 +87,12 @@ public class GamePanel extends JPanel implements Runnable {
     @Override
 public void run() {
     while (running) {
-        if (!gameOver && !choosingUpgrade) {
+        if (!gameOver && !choosingUpgrade && !gameWon) {
             player.update();
             spawner.update();
+        }
+        if (!gameOver && !gameWon) {
+            player.update();
         }
 
         long currentTime = System.currentTimeMillis();
@@ -96,6 +101,9 @@ public void run() {
             gameOver = true;
         }
 
+        if (player.getPERMA().isMaxed()) {
+            gameWon = true;
+        }
         if (!gameOver) {
         if (currentTime - lastPowerUpSpawnTime > powerUpSpawnCooldown) {
             spawnRandomPowerUp();
@@ -238,15 +246,15 @@ public void run() {
         }
     }
     private void resetGame() {
-    enemies.clear();
-    projectiles.clear();
-    powerUps.clear();
+        enemies.clear();
+        projectiles.clear();
+        powerUps.clear();
 
-    player = new Player(input, projectiles, enemies);
+        player = new Player(input, projectiles, enemies);
+        spawner = new EnemySpawn(player, enemies, getWidth(), getHeight());
 
-    spawner = new EnemySpawn(player, enemies, getWidth(), getHeight());
-
-    gameOver = false;
+        gameOver = false;
+        gameWon = false;    
     }
     private void selectUpgrade(int index) {
         if (index >= 0 && index < currentUpgrades.size()) {
