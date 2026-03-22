@@ -5,9 +5,9 @@ public class Projectile {
 
     public double x, y;
     public double dx, dy;
-    int speed = 6;
-    int width = 10;
-    int height = 5;
+    public int speed = 6;
+    public int width = 10;
+    public int height = 5;
 
     public Projectile(double x, double y, double dx, double dy) {
         this.x = x;

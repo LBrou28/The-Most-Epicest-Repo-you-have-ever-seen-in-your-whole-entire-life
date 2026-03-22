@@ -4,10 +4,7 @@ import Entities.Player;
 import Entities.PowerUp;
 import Entities.PowerUpType;
 import Entities.Projectile;
-import Entities.UpgradeManager;
-import Entities.PlayerHealth;
 import Entities.Upgrade;
-import Entities.UpgradeType;
 import Entities.UpgradeManager;
 import Input.InputHandler;
 import java.awt.*;
@@ -23,6 +20,8 @@ public class GamePanel extends JPanel implements Runnable {
 
     Thread gameThread;
     boolean running;
+
+    private boolean paused = false;
 
     ArrayList<Enemy> enemies = new ArrayList<>();
     ArrayList<Projectile> projectiles = new ArrayList<>();
@@ -55,7 +54,7 @@ public class GamePanel extends JPanel implements Runnable {
 
         player = new Player(input, projectiles, enemies);
 
-        spawner = new EnemySpawn(player, enemies, 800, 600);
+       spawner = new EnemySpawn(player, enemies, projectiles, 800, 600);
 
         try {
             chuck = ImageIO.read(new File("src/assets/Chuck.png"));
@@ -67,7 +66,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void startgame() {
         enemies.add(new ZynDemon());
-        enemies.add(new FireSpitter());
+        enemies.add(new FireSpitter(this.projectiles));
         enemies.add(new SpeedyGonzales());
         running = true;
         gameThread = new Thread(this);
@@ -120,13 +119,10 @@ public void run() {
             }
         }
 
-        for (Enemy e : enemies) {
-            e.update(player);
-
-            if (Enemy.checkCollision(e, player)) {
-            e.attack(player);  
-            player.takeDamage(5);
-        }
+       for (Enemy e : enemies) {
+    e.update(player);
+    e.attack(player);
+    if (Enemy.checkCollision(e, player)) player.takeDamage(5);
 }
 
         separateEnemiesFromPlayer();
@@ -303,6 +299,17 @@ public void run() {
 
     for (Projectile p : projectiles) {
     p.draw(g, player.x, player.y, centerX, centerY);
+}
+if (paused) {
+    Graphics2D g2d = (Graphics2D) g;
+    g2d.setColor(new Color(0, 0, 0, 150));
+    g2d.fillRect(0, 0, getWidth(), getHeight());
+
+    g2d.setColor(Color.WHITE);
+    g2d.setFont(new Font("Arial", Font.BOLD, 50));
+    String pauseText = "PAUSED";
+    int textWidth = g2d.getFontMetrics().stringWidth(pauseText);
+    g2d.drawString(pauseText, getWidth() / 2 - textWidth / 2, getHeight() / 2);
 }
 
 

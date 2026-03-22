@@ -12,8 +12,8 @@ public class Player {
 
     private PlayerHealth health = new PlayerHealth(100);
 
-    ArrayList<Projectile> projectiles;
-    ArrayList<Enemy> enemies;
+    public ArrayList<Projectile> projectiles;
+   protected ArrayList<Enemy> enemies;
 
         boolean isDashing = false;
         long dashTime = 0;
