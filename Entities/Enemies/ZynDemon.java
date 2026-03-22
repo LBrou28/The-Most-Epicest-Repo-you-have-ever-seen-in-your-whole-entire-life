@@ -6,18 +6,17 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 public class ZynDemon extends Enemy {
-    
+
     public ZynDemon() {
         super(Math.random() * 250, Math.random() * 250, 5, 5);
         enemyImage = setSprite();
         width = enemyImage.getWidth() / 4;
         height = enemyImage.getHeight() / 4;
-        speed = 1.5;
+        speed = 2.0;
     }
 
     @Override
     public void attack(Player player) {
-        // no attack yet
     }
 
     public BufferedImage setSprite() {

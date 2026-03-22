@@ -1,17 +1,18 @@
 package Entities.Enemies;
+
 import Entities.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
 public class FireSpitter extends Enemy {
-    
+
     public FireSpitter() {
         super(Math.random() * 250, Math.random() * 250, 5, 5);
         enemyImage = setSprite();
-        width = enemyImage.getWidth() / 12;
-        height = enemyImage.getHeight() / 12;
-        speed = 1.2;
+        width = enemyImage.getWidth() / 16;
+        height = enemyImage.getHeight() / 16;
+        speed = 1.0;
     }
 
     public BufferedImage setSprite() {
@@ -26,6 +27,6 @@ public class FireSpitter extends Enemy {
 
     @Override
     public void attack(Player player) {
-        projectiles.add(new Projectile((int)xPos, (int)yPos, width, height));
+        projectiles.add(new Projectile((int) xPos, (int) yPos, width, height));
     }
 }
