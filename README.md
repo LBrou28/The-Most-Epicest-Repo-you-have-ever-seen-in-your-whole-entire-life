@@ -1,8 +1,31 @@
-# The-Most-Epicest-Repo-you-have-ever-seen-in-your-whole-entire-life
-printf("Now this, is epic")
-Creators: Luke, Hannah Lowery, Trey, Joseph, Jordan 
+Chuck Norris Against Evil : Team [Your Team Number]
+Members
 
-Chuck Norris Survivors
-Spin on classic games such as Vampire Survivors
+Project Manager: Luke ([LBrou28])
+Communications Lead: Trey Menasco ([GitHub Name])
+Git Master: Jordan ([GitHub Name])
+Design Lead: Hannah Lowery ([GitHub Name])
+Quality Assurance Tester: Joseph Pena ([GitHub Name])
 
-Brainrot Demons are sucking out the happiness from earth, and there is only one man that can save us all. Chuck Norris against Brainrot.
+About Our Software
+
+Chuck Norris Against Evil is a 2D survival-style Java game where the player controls Chuck Norris and fights off waves of enemies. The player automatically attacks nearby enemies while navigating the world, collecting powerups, and avoiding collisions.
+
+The game features:
+
+Enemy "pathing" that chases the player
+Projectile-based combat
+Powerups that enhance abilities (range, speed, attack speed, damage)
+Infinite scrolling background
+Collision handling between player and enemies
+Simple UI with menu and sound effects
+
+The goal is to survive as long as possible while growing stronger.
+
+Platforms Tested on:
+Windows
+
+
+How to Run Dev and Test Environment
+Dependencies
+Any Java IDE (we used VS Code)
