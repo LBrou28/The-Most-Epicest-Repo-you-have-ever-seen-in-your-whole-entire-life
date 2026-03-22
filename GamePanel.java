@@ -71,9 +71,6 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void startgame() {
-        enemies.add(new ZynDemon());
-        enemies.add(new FireSpitter());
-        enemies.add(new SpeedyGonzales());
 
         running = true;
         gameThread = new Thread(this);

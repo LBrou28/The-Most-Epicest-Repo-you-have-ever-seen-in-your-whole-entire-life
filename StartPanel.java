@@ -23,13 +23,7 @@ public class StartPanel extends JPanel {
         gbc.gridx = 0;
         gbc.gridy = 0;
 
-        // CHANGE THIS PLS
-        /*try {
-            backgroundImage = ImageIO.read(new File("src/assets/bg.png"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
-
+   
         // audio
         backgroundMusic = loadClip("src/assets/retro-streets.wav");
         startButtonSound = loadClip("src/assets/ChuckMotiv.wav");
