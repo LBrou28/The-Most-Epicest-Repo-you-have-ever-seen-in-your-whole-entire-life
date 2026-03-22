@@ -52,27 +52,34 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     @Override
-    public void run() {
-        while (running) {
+public void run() {
+    while (running) {
 
-            player.update();
+        player.update();
 
-            for (int i = 0; i < projectiles.size(); i++) {
-                Projectile p = projectiles.get(i);
-                p.update();
+        for (Enemy e : enemies) {
+            e.update(player);
+        }
 
-                if (p.isOffScreen(player.x, player.y, getWidth(), getHeight())) {
-                    projectiles.remove(i);
-                    i--;
-                }
+        for (int i = 0; i < projectiles.size(); i++) {
+            Projectile p = projectiles.get(i);
+            p.update();
+
+            if (p.isOffScreen(player.x, player.y, getWidth(), getHeight())) {
+                projectiles.remove(i);
+                i--;
             }
+        }
 
-            repaint();
+        repaint();
 
-            try { Thread.sleep(16); }
-            catch (InterruptedException e) { e.printStackTrace(); }
+        try {
+            Thread.sleep(16);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
+}
 
     @Override
 protected void paintComponent(Graphics g) {

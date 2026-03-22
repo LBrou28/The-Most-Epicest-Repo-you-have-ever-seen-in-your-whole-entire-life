@@ -9,23 +9,23 @@ public class FireSpitter extends Enemy {
     public FireSpitter() {
         super(Math.random() * 250, Math.random() * 250, 5, 5);
         enemyImage = setSprite();
-        width = enemyImage.getWidth()/16;
-        height = enemyImage.getHeight()/16;
+        width = enemyImage.getWidth() / 12;
+        height = enemyImage.getHeight() / 12;
+        speed = 1.2;
     }
 
     public BufferedImage setSprite() {
         BufferedImage enemy = null;
         try {
-        enemy = ImageIO.read(getClass().getResourceAsStream("EnemyImages/demon.png"));
-        }   catch (IOException e) {
-        e.printStackTrace();
+            enemy = ImageIO.read(getClass().getResourceAsStream("EnemyImages/demon.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return enemy;
     }
 
+    @Override
     public void attack(Player player) {
-        projectiles.add(new Projectile((int) xPos, (int) yPos, width, height)); 
+        projectiles.add(new Projectile((int)xPos, (int)yPos, width, height));
     }
-
-    
 }
