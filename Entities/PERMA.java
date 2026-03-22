@@ -6,11 +6,11 @@ public class PERMA {
 
     
 
-    public int P = 25;
-    public int E = 25;
-    public int R = 25;
-    public int M = 25;
-    public int A = 25;
+    public int P = 50;
+    public int E = 50;
+    public int R = 50;
+    public int M = 50;
+    public int A = 50;
 
     private final int MAX = 100;
 
