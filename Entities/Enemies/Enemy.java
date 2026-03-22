@@ -6,7 +6,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-public abstract class Enemy extends ImageInterface{
+public abstract class Enemy {
     protected double xPos, yPos, damage, health, speed;
     protected int width, height;
 
@@ -101,7 +101,9 @@ public abstract class Enemy extends ImageInterface{
         return health <= 0;
     }
 
-    public abstract void attack(Player player);
+    public void attack(Player player) {
+        player.takeDamage(damage);
+    }
 
     public void removeEnemy(ArrayList<Enemy> enemies, int enemy) {
         enemies.remove(enemy);

@@ -2,6 +2,8 @@ package Entities.Enemies;
 
 import Entities.*;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 
 /* this enemy represents loniliness. Drains relationships */
 public class LonelyGhost extends Enemy {
@@ -12,9 +14,9 @@ public class LonelyGhost extends Enemy {
         super(Math.random() * 250, Math.random() * 250, 2, 6);
 
         enemyImage = setSprite();
-        width = enemyImage.getWidth() / 20;
-        height = enemyImage.getHeight() / 20;
-        speed = 2.0;
+        width = enemyImage.getWidth() / 8;
+        height = enemyImage.getHeight() / 8;
+        speed = 1.5;
     }
 
     @Override
@@ -22,12 +24,18 @@ public class LonelyGhost extends Enemy {
         long time = System.currentTimeMillis();
 
         if (time - lastDrainTime > 1000) {
-            player.getPERMA().increase("R", -5); 
+            super.attack(player);
+            player.getPERMA().increase("R", -5);
             lastDrainTime = time;
         }
     }
 
     private BufferedImage setSprite() {
-        return sprites.get(2);
+        try {
+            return ImageIO.read(getClass().getResourceAsStream("EnemyImages/Loneliness.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }
