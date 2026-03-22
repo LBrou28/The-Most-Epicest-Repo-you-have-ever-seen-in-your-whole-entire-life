@@ -13,11 +13,16 @@ public class EnemySpawn {
     private int screenHeight;
 
     private long lastSpawnTime = 0;
-    private long spawnDelay = 1200;      // starts slower
-    private long minSpawnDelay = 300;    // cap so it never becomes infinite
+
+    private long baseSpawnDelay = 1200;
+    private final long minSpawnDelay = 400;
+
     private long lastDifficultyIncrease = 0;
-    private long difficultyInterval = 10000; // every 10 sec
-    private long spawnStep = 75;         // reduce delay by 75 ms each step
+    private final long difficultyInterval = 10000;
+    private final long spawnStep = 50;
+
+    private boolean bossMode = false;
+    private final long bossExtraDelay = 600;
 
     private Random random = new Random();
 
@@ -31,23 +36,32 @@ public class EnemySpawn {
     public void update() {
         long currentTime = System.currentTimeMillis();
 
-        // Spawn enemy when enough time has passed
-        if (currentTime - lastSpawnTime >= spawnDelay) {
+        if (currentTime - lastDifficultyIncrease >= difficultyInterval) {
+            baseSpawnDelay = Math.max(minSpawnDelay, baseSpawnDelay - spawnStep);
+            lastDifficultyIncrease = currentTime;
+        }
+
+        long currentSpawnDelay = getCurrentSpawnDelay();
+
+        if (currentTime - lastSpawnTime >= currentSpawnDelay) {
             spawnEnemy();
             lastSpawnTime = currentTime;
         }
+    }
 
-        // Increase difficulty over time, but stop at minSpawnDelay
-        if (currentTime - lastDifficultyIncrease >= difficultyInterval) {
-            spawnDelay = Math.max(minSpawnDelay, spawnDelay - spawnStep);
-            lastDifficultyIncrease = currentTime;
+    private long getCurrentSpawnDelay() {
+        if (bossMode) {
+            return baseSpawnDelay + bossExtraDelay;
         }
+        return baseSpawnDelay;
+    }
+
+    public void setBossMode(boolean bossMode) {
+        this.bossMode = bossMode;
     }
 
     private void spawnEnemy() {
-        int margin = 150; // farther outside the screen
-        int side = random.nextInt(4);
-
+        int margin = 150;
         double spawnX = 0;
         double spawnY = 0;
 
@@ -57,6 +71,8 @@ public class EnemySpawn {
         boolean validSpawn = false;
 
         while (!validSpawn) {
+            int side = random.nextInt(4);
+
             switch (side) {
                 case 0: // top
                     spawnX = player.x + random.nextInt(screenWidth + 200) - (screenWidth / 2 + 100);
@@ -83,11 +99,8 @@ public class EnemySpawn {
             double dy = spawnY - playerCenterY;
             double distance = Math.sqrt(dx * dx + dy * dy);
 
-            // extra safety so enemies never spawn too close
-            if (distance > 250) {
+            if (distance > 300) {
                 validSpawn = true;
-            } else {
-                side = random.nextInt(4);
             }
         }
 
@@ -100,9 +113,9 @@ public class EnemySpawn {
         Enemy e;
 
         if (roll < 8) {
-            e = new FireSpitter();        // less common
+            e = new FireSpitter();
         } else if (roll < 38) {
-            e = new SpeedyGonzales();     // more common
+            e = new SpeedyGonzales();
         } else if (roll < 58) {
             e = new LonelyGhost();
         } else if (roll < 73) {

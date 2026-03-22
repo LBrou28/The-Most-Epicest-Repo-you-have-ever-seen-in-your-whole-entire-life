@@ -42,7 +42,6 @@ public class Player {
     }
 
     public void update() {
-
         double dx = 0;
         double dy = 0;
 
@@ -53,12 +52,10 @@ public class Player {
 
         long currentTime = System.currentTimeMillis();
 
-        // PERMA scaling
         speed = 3 + perma.E * 0.02;
         damage = 1 + perma.M * 0.05;
         shootCooldown = Math.max(100, 500 - perma.E * 2);
 
-        // dash logic
         if (input.dash && !isDashing && (currentTime - lastDashTime > dashCooldown)) {
             isDashing = true;
             dashTime = currentTime;
@@ -117,7 +114,7 @@ public class Player {
 
     private void shoot(Enemy enemy) {
         double px = x + width / 2.0;
-        double py = y + height / 2.0 - 15; 
+        double py = y + height / 2.0 - 15;
 
         double ex = enemy.getX() + enemy.getWidth() / 2.0;
         double ey = enemy.getY() + enemy.getHeight() / 2.0;
@@ -161,7 +158,7 @@ public class Player {
                     i--;
 
                     if (e.isDead()) {
-                        rewardPERMAForKill(e);  
+                        rewardPERMAForKill(e);
                         enemies.remove(j);
                         j--;
                     }
@@ -172,7 +169,6 @@ public class Player {
         }
     }
 
-  
     private void rewardPERMAForKill(Enemy e) {
         if (e instanceof FireSpitter) {
             perma.increase("P", 5);
@@ -197,7 +193,7 @@ public class Player {
         long currentTime = System.currentTimeMillis();
 
         if (currentTime - lastDamageTime > damageCooldown) {
-            double reduction = Math.min(0.8, perma.R * 0.01); // capped
+            double reduction = Math.min(0.8, perma.R * 0.01);
             double finalDamage = damage * (1 - reduction);
 
             health.takeDamage(finalDamage);
