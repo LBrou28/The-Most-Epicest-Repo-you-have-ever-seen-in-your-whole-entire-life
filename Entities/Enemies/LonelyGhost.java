@@ -2,8 +2,6 @@ package Entities.Enemies;
 
 import Entities.*;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import javax.imageio.ImageIO;
 
 /* this enemy represents loniliness. Drains relationships */
 public class LonelyGhost extends Enemy {
@@ -11,11 +9,11 @@ public class LonelyGhost extends Enemy {
     private long lastDrainTime = 0;
 
     public LonelyGhost() {
-        super(Math.random() * 250, Math.random() * 250, 2, 25);
+        super(Math.random() * 250, Math.random() * 250, 2, 6);
 
         enemyImage = setSprite();
-        width = enemyImage.getWidth() / 8;
-        height = enemyImage.getHeight() / 8;
+        width = enemyImage.getWidth() / 20;
+        height = enemyImage.getHeight() / 20;
         speed = 1.5;
     }
 

@@ -1,37 +1,37 @@
 package Entities;
 
-import Entities.Enemies.Enemy;
+import Entities.Enemies.*;
 import Input.InputHandler;
 import java.util.ArrayList;
 
 public class Player {
 
     public int x, y, width = 32, height = 64;
-        double speed = 3;
-        double dashSpeed = 10;
+    double speed = 3;
+    double dashSpeed = 10;
 
     private PlayerHealth health = new PlayerHealth(100);
 
     ArrayList<Projectile> projectiles;
     ArrayList<Enemy> enemies;
 
-        boolean isDashing = false;
-        long dashTime = 0;
-        long dashDuration = 150;
+    boolean isDashing = false;
+    long dashTime = 0;
+    long dashDuration = 150;
 
-        long lastDashTime = 0;
-        long dashCooldown = 500;
+    long lastDashTime = 0;
+    long dashCooldown = 500;
 
-        long lastShotTime = 0;
-        long shootCooldown = 500;
-        double shootRadius = 150;
-        double damage = 3;
-        
-        InputHandler input;
+    long lastShotTime = 0;
+    long shootCooldown = 500;
+    double shootRadius = 150;
+    double damage = 3;
 
-        private long lastDamageTime = 0;
-        private long damageCooldown = 500;
-        private PERMA perma = new PERMA();
+    InputHandler input;
+
+    private long lastDamageTime = 0;
+    private long damageCooldown = 500;
+    private PERMA perma = new PERMA();
 
     public Player(InputHandler input, ArrayList<Projectile> projectiles, ArrayList<Enemy> enemies) {
         this.input = input;
@@ -42,7 +42,6 @@ public class Player {
     }
 
     public void update() {
-
         double dx = 0;
         double dy = 0;
 
@@ -84,6 +83,7 @@ public class Player {
             shoot(closestEnemy);
             lastShotTime = currentTime;
         }
+
         checkBulletCollision();
         health.update(isDashing);
     }
@@ -102,12 +102,11 @@ public class Player {
             double dx = ex - px;
             double dy = ey - py;
             double dist = Math.sqrt(dx * dx + dy * dy);
-            
+
             if (dist < shootRadius && dist < closestDist) {
                 closestDist = dist;
                 closest = e;
             }
-            
         }
 
         return closest;
@@ -115,7 +114,7 @@ public class Player {
 
     private void shoot(Enemy enemy) {
         double px = x + width / 2.0;
-        double py = y + height / 2.0;
+        double py = y + height / 2.0 - 15;
 
         double ex = enemy.getX() + enemy.getWidth() / 2.0;
         double ey = enemy.getY() + enemy.getHeight() / 2.0;
@@ -132,109 +131,126 @@ public class Player {
             projectiles.add(new Projectile(px, py, dx, dy));
         }
     }
+
     public void checkBulletCollision() {
-    for (int i = 0; i < projectiles.size(); i++) {
-        Projectile p = projectiles.get(i);
+        for (int i = 0; i < projectiles.size(); i++) {
+            Projectile p = projectiles.get(i);
 
-        double pX = p.x;
-        double pY = p.y;
-        double pXEnd = pX + p.width;
-        double pYEnd = pY + p.height;
+            double pX = p.x;
+            double pY = p.y;
+            double pXEnd = pX + p.width;
+            double pYEnd = pY + p.height;
 
-        for (int j = 0; j < enemies.size(); j++) {
-            Enemy e = enemies.get(j);
+            for (int j = 0; j < enemies.size(); j++) {
+                Enemy e = enemies.get(j);
 
-            double eX = e.getX();
-            double eY = e.getY();
-            double eXEnd = eX + e.getWidth();
-            double eYEnd = eY + e.getHeight();
+                double eX = e.getX();
+                double eY = e.getY();
+                double eXEnd = eX + e.getWidth();
+                double eYEnd = eY + e.getHeight();
 
-            boolean overlapX = pX < eXEnd && pXEnd > eX;
-            boolean overlapY = pY < eYEnd && pYEnd > eY;
+                boolean overlapX = pX < eXEnd && pXEnd > eX;
+                boolean overlapY = pY < eYEnd && pYEnd > eY;
 
-            if (overlapX && overlapY) {
-                System.out.println("Enemy hit!");
+                if (overlapX && overlapY) {
+                    e.takeDamage(damage);
+                    projectiles.remove(i);
+                    i--;
 
-                e.takeDamage(damage);
-                projectiles.remove(i);
-                i--;
+                    if (e.isDead()) {
+                        rewardPERMAForKill(e);
+                        enemies.remove(j);
+                        j--;
+                    }
 
-                if (e.isDead()) {
-                    enemies.remove(j);
-                    j--;
+                    break;
                 }
-
-                break;
             }
         }
     }
-}
 
-public void takeDamage(double damage) {
-    long currentTime = System.currentTimeMillis();
-
-    if (currentTime - lastDamageTime > damageCooldown) {
-
-        double reduction = perma.R * 0.01; 
-        double finalDamage = damage * (1 - reduction);
-
-        health.takeDamage(finalDamage);
-        lastDamageTime = currentTime;
-    }
-}
-
-
-public PERMA getPERMA() {
-    return perma;
-}
-
-public void applyUpgrade(Upgrade upgrade) {
-    switch (upgrade.type) {
-        case SPEED -> perma.increase("E", 10);
-        case DAMAGE -> perma.increase("M", 10);
-        case FIRE_RATE -> perma.increase("E", 10);
-        case RANGE -> perma.increase("A", 10);
-        case HEAL -> {
-            health.heal(20);
-            perma.increase("P", 10);
+    private void rewardPERMAForKill(Enemy e) {
+        if (e instanceof FireSpitter) {
+            perma.increase("P", 5);
+        } else if (e instanceof SpeedyGonzales) {
+            perma.increase("E", 5);
+        } else if (e instanceof LonelyGhost) {
+            perma.increase("R", 5);
+        } else if (e instanceof DoubtPhantom) {
+            perma.increase("M", 5);
+        } else if (e instanceof ZynDemon) {
+            perma.increase("A", 5);
+        } else if (e instanceof Sadness) {
+            perma.increase("P", 2);
+            perma.increase("E", 2);
+            perma.increase("R", 2);
+            perma.increase("M", 2);
+            perma.increase("A", 2);
         }
     }
-}
 
-public double getSpeed() {
-    return speed;
-}
+    public void takeDamage(double damage) {
+        long currentTime = System.currentTimeMillis();
 
-public void setSpeed(double speed) {
-    this.speed = speed;
-}
+        if (currentTime - lastDamageTime > damageCooldown) {
+            double reduction = Math.min(0.8, perma.R * 0.01);
+            double finalDamage = damage * (1 - reduction);
 
-public long getShootCooldown() {
-    return shootCooldown;
-}
+            health.takeDamage(finalDamage);
+            lastDamageTime = currentTime;
+        }
+    }
 
-public void setShootCooldown(long shootCooldown) {
-    this.shootCooldown = shootCooldown;
-}
+    public PERMA getPERMA() {
+        return perma;
+    }
 
-public double getShootRadius() {
-    return shootRadius;
-}
+    public void applyUpgrade(Upgrade upgrade) {
+        switch (upgrade.type) {
+            case SPEED -> perma.increase("E", 10);
+            case DAMAGE -> perma.increase("M", 10);
+            case FIRE_RATE -> perma.increase("E", 10);
+            case RANGE -> perma.increase("A", 10);
+            case HEAL -> {
+                health.heal(20);
+                perma.increase("P", 10);
+            }
+        }
+    }
 
-public void setShootRadius(double shootRadius) {
-    this.shootRadius = shootRadius;
-}
+    public double getSpeed() {
+        return speed;
+    }
 
-public double getDamage() {
-    return damage;
-}
+    public void setSpeed(double speed) {
+        this.speed = speed;
+    }
 
-public void setDamage(double damage) {
-    this.damage = damage;
-}
+    public long getShootCooldown() {
+        return shootCooldown;
+    }
 
-public PlayerHealth getHealth() {
-    return health;
-}
+    public void setShootCooldown(long shootCooldown) {
+        this.shootCooldown = shootCooldown;
+    }
 
+    public double getShootRadius() {
+        return shootRadius;
+    }
+
+    public void setShootRadius(double shootRadius) {
+        this.shootRadius = shootRadius;
+    }
+
+    public double getDamage() {
+        return damage;
+    }
+
+    public void setDamage(double damage) {
+        this.damage = damage;
+    }
+
+    public PlayerHealth getHealth() {
+        return health;
+    }
 }

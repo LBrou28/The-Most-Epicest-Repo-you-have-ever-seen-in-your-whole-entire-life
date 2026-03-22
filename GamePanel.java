@@ -4,16 +4,15 @@ import Entities.Player;
 import Entities.PowerUp;
 import Entities.PowerUpType;
 import Entities.Projectile;
-import Entities.UpgradeManager;
-import Entities.PlayerHealth;
 import Entities.Upgrade;
-import Entities.UpgradeType;
 import Entities.UpgradeManager;
 import Input.InputHandler;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Random;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
@@ -34,14 +33,21 @@ public class GamePanel extends JPanel implements Runnable {
 
     private InputHandler input;
     private Player player;
-
     private EnemySpawn spawner;
+
     private boolean gameOver = false;
+    private boolean gameWon = false;
 
     private boolean choosingUpgrade = false;
     private ArrayList<Upgrade> currentUpgrades = new ArrayList<>();
 
-    private boolean gameWon = false;
+    private SadnessChuck boss = null;
+    private boolean bossTriggered = false;
+    private boolean bossIncoming = false;
+    private boolean bossSpawned = false;
+
+    private long bossIncomingStartTime = 0;
+    private long bossIncomingDuration = 2500;
 
     public GamePanel() {
         this.setPreferredSize(new Dimension(800, 600));
@@ -54,7 +60,6 @@ public class GamePanel extends JPanel implements Runnable {
         SwingUtilities.invokeLater(() -> requestFocusInWindow());
 
         player = new Player(input, projectiles, enemies);
-
         spawner = new EnemySpawn(player, enemies, 800, 600);
 
         try {
@@ -66,103 +71,127 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void startgame() {
-        enemies.add(new ZynDemon());
-        enemies.add(new FireSpitter());
-        enemies.add(new SpeedyGonzales());
+
         running = true;
         gameThread = new Thread(this);
         gameThread.start();
     }
 
     private void spawnRandomPowerUp() {
-    PowerUpType[] types = PowerUpType.values();
-    PowerUpType randomType = types[random.nextInt(types.length)];
+        PowerUpType[] types = PowerUpType.values();
+        PowerUpType randomType = types[random.nextInt(types.length)];
 
-    double spawnX = player.x + random.nextInt(401) - 200;
-    double spawnY = player.y + random.nextInt(401) - 200;
+        double spawnX = player.x + random.nextInt(401) - 200;
+        double spawnY = player.y + random.nextInt(401) - 200;
 
-    powerUps.add(new PowerUp(spawnX, spawnY, randomType));
+        powerUps.add(new PowerUp(spawnX, spawnY, randomType));
+    }
+
+    private void triggerBossPhase() {
+        bossTriggered = true;
+        bossIncoming = true;
+        bossSpawned = false;
+        bossIncomingStartTime = System.currentTimeMillis();
+        spawner.setBossMode(true);
+    }
+
+    private void spawnBoss() {
+        double bossX = player.x + 450;
+        double bossY = player.y - 200;
+
+        boss = new SadnessChuck(bossX, bossY);
+        enemies.add(boss);
+
+        bossIncoming = false;
+        bossSpawned = true;
     }
 
     @Override
-public void run() {
-    while (running) {
-        if (!gameOver && !choosingUpgrade && !gameWon) {
-            player.update();
-            spawner.update();
-        }
-        if (!gameOver && !gameWon) {
-            player.update();
-        }
+    public void run() {
+        while (running) {
+            if (!gameOver && !choosingUpgrade && !gameWon) {
+                player.update();
 
-        long currentTime = System.currentTimeMillis();
+                if (!bossIncoming) {
+                    spawner.update();
+                }
 
-        if (player.getHealth().isDead()) {
-            gameOver = true;
-        }
+                long currentTime = System.currentTimeMillis();
 
-        if (player.getPERMA().isMaxed()) {
-            gameWon = true;
-        }
-        if (!gameOver) {
-        if (currentTime - lastPowerUpSpawnTime > powerUpSpawnCooldown) {
-            spawnRandomPowerUp();
-            lastPowerUpSpawnTime = currentTime;
-        }
+                if (currentTime - lastPowerUpSpawnTime > powerUpSpawnCooldown) {
+                    spawnRandomPowerUp();
+                    lastPowerUpSpawnTime = currentTime;
+                }
 
-        for (int i = 0; i < powerUps.size(); i++) {
-            PowerUp p = powerUps.get(i);
+                for (int i = 0; i < powerUps.size(); i++) {
+                    PowerUp p = powerUps.get(i);
 
-            if (p.collidesWith(player)) {
-                p.apply(player);
-                powerUps.remove(i);
-                i--;
+                    if (p.collidesWith(player)) {
+                        p.apply(player);
+                        powerUps.remove(i);
+                        i--;
+                    }
+                }
+
+                for (Enemy e : enemies) {
+                    e.update(player);
+
+                    if (Enemy.checkCollision(e, player)) {
+                        e.attack(player);
+                    }
+                }
+
+                separateEnemiesFromPlayer();
+                separateEnemies();
+
+                for (int i = 0; i < projectiles.size(); i++) {
+                    Projectile p = projectiles.get(i);
+                    p.update();
+
+                    if (p.isOffScreen(player.x, player.y, getWidth(), getHeight())) {
+                        projectiles.remove(i);
+                        i--;
+                    }
+                }
+
+                if (!bossTriggered && player.getPERMA().isMaxed()) {
+                    triggerBossPhase();
+                }
+
+                if (bossIncoming && currentTime - bossIncomingStartTime >= bossIncomingDuration) {
+                    spawnBoss();
+                }
+
+                if (bossSpawned && boss != null && boss.isDead()) {
+                    boss = null;
+                    bossSpawned = false;
+                    gameWon = true;
+                }
+
+                if (player.getHealth().isDead()) {
+                    gameOver = true;
+                }
             }
-        }
 
-        for (Enemy e : enemies) {
-            e.update(player);
+            if (choosingUpgrade) {
+                if (input.up) selectUpgrade(0);
+                if (input.left) selectUpgrade(1);
+                if (input.right) selectUpgrade(2);
+            }
 
-            if (Enemy.checkCollision(e, player)) {
-            e.attack(player);  
-            player.takeDamage(5);
-        }
-}
+            if ((gameOver || gameWon) && input.restart) {
+                resetGame();
+            }
 
-        separateEnemiesFromPlayer();
-        separateEnemies();
+            repaint();
 
-        spawner.update();
-
-        for (int i = 0; i < projectiles.size(); i++) {
-            Projectile p = projectiles.get(i);
-            p.update();
-
-            if (p.isOffScreen(player.x, player.y, getWidth(), getHeight())) {
-                projectiles.remove(i);
-                i--;
+            try {
+                Thread.sleep(16);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
     }
-        repaint();
-
-        try {
-            Thread.sleep(16);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    if (choosingUpgrade) {
-        if (input.up) selectUpgrade(0);
-        if (input.left) selectUpgrade(1);
-        if (input.right) selectUpgrade(2);
-    }   
-
-    if (gameOver && input.restart) {
-        resetGame();
-        }
-    }
-
-}
 
     private void separateEnemiesFromPlayer() {
         for (Enemy e : enemies) {
@@ -176,7 +205,6 @@ public void run() {
             double dy = enemyCenterY - playerCenterY;
 
             double distance = Math.sqrt(dx * dx + dy * dy);
-
             double minDistance = (e.getWidth() + player.width) / 2.0 - 15;
 
             if (distance == 0) {
@@ -212,7 +240,6 @@ public void run() {
                 double dy = bCenterY - aCenterY;
 
                 double distance = Math.sqrt(dx * dx + dy * dy);
-
                 double minDistance = (a.getWidth() + b.getWidth()) / 2.0;
 
                 if (distance == 0) {
@@ -242,9 +269,10 @@ public void run() {
         currentUpgrades.clear();
 
         for (int i = 0; i < 3; i++) {
-        currentUpgrades.add(UpgradeManager.getRandomUpgrade());
+            currentUpgrades.add(UpgradeManager.getRandomUpgrade());
         }
     }
+
     private void resetGame() {
         enemies.clear();
         projectiles.clear();
@@ -254,8 +282,14 @@ public void run() {
         spawner = new EnemySpawn(player, enemies, getWidth(), getHeight());
 
         gameOver = false;
-        gameWon = false;    
+        gameWon = false;
+
+        boss = null;
+        bossTriggered = false;
+        bossIncoming = false;
+        bossSpawned = false;
     }
+
     private void selectUpgrade(int index) {
         if (index >= 0 && index < currentUpgrades.size()) {
             player.applyUpgrade(currentUpgrades.get(index));
@@ -265,121 +299,156 @@ public void run() {
 
     @Override
     protected void paintComponent(Graphics g) {
-    super.paintComponent(g);
+        super.paintComponent(g);
 
-    int centerX = getWidth() / 2;
-    int centerY = getHeight() / 2;
+        int centerX = getWidth() / 2;
+        int centerY = getHeight() / 2;
 
-    if (grass != null) {
-        double scale = 0.5;
+        if (grass != null) {
+            double scale = 0.5;
 
-        int tileWidth = (int) (grass.getWidth() * scale);
-        int tileHeight = (int) (grass.getHeight() * scale);
+            int tileWidth = (int) (grass.getWidth() * scale);
+            int tileHeight = (int) (grass.getHeight() * scale);
 
-        int offsetX = (int) (-player.x * scale + centerX) % tileWidth;
-        int offsetY = (int) (-player.y * scale + centerY) % tileHeight;
+            int offsetX = (int) (-player.x * scale + centerX) % tileWidth;
+            int offsetY = (int) (-player.y * scale + centerY) % tileHeight;
 
-        if (offsetX > 0) offsetX -= tileWidth;
-        if (offsetY > 0) offsetY -= tileHeight;
+            if (offsetX > 0) offsetX -= tileWidth;
+            if (offsetY > 0) offsetY -= tileHeight;
 
-        for (int x = offsetX; x < getWidth(); x += tileWidth) {
-            for (int y = offsetY; y < getHeight(); y += tileHeight) {
-                g.drawImage(grass, x, y, tileWidth, tileHeight, null);
+            for (int x = offsetX; x < getWidth(); x += tileWidth) {
+                for (int y = offsetY; y < getHeight(); y += tileHeight) {
+                    g.drawImage(grass, x, y, tileWidth, tileHeight, null);
+                }
             }
         }
-    }
 
-    for (Enemy e : enemies) {
-        e.draw(g, player, getWidth(), getHeight());
+        for (Enemy e : enemies) {
+            e.draw(g, player, getWidth(), getHeight());
+        }
 
-        if (Enemy.checkCollision(e, player)) {
-            player.takeDamage(5); 
-}
-    }
+        for (PowerUp p : powerUps) {
+            p.draw(g, player.x, player.y, centerX, centerY);
+        }
 
-    for (PowerUp p : powerUps) {
-        p.draw(g, player.x, player.y, centerX, centerY);
-    }
+        for (Projectile p : projectiles) {
+            p.draw(g, player.x, player.y, centerX, centerY);
+        }
 
-    for (Projectile p : projectiles) {
-    p.draw(g, player.x, player.y, centerX, centerY);
-}
+        Graphics2D g2 = (Graphics2D) g;
+        g2.setColor(new Color(100, 100, 100, 80));
 
+        int radius = (int) player.getShootRadius();
+        int diameter = radius * 2;
+        g2.fillOval(centerX - radius, centerY - radius, diameter, diameter);
 
-    Graphics2D g2 = (Graphics2D) g;
-    g2.setColor(new Color(100, 100, 100, 80));
+        if (chuck != null) {
+            g.drawImage(chuck, centerX - 16, centerY - 32, 50, 90, null);
+        }
 
-    int radius = (int) player.getShootRadius();
-    int diameter = radius * 2;
+        player.getHealth().draw(g);
+        player.getPERMA().draw(g);
 
-    g2.fillOval(centerX - radius, centerY - radius, diameter, diameter);
+        if (bossIncoming) {
+            Graphics2D gWarn = (Graphics2D) g;
+            gWarn.setFont(new Font("Arial", Font.BOLD, 36));
+            gWarn.setColor(Color.RED);
 
-    
-    if (chuck != null) {
-    g.drawImage(chuck, centerX - 16, centerY - 32, 50, 90, null);
-    }
+            String text = "BOSS INCOMING!";
+            int textWidth = gWarn.getFontMetrics().stringWidth(text);
+            gWarn.drawString(text, getWidth() / 2 - textWidth / 2, 50);
+        }
 
-    if (chuck != null) {
-    g.drawImage(chuck, centerX - 16, centerY - 32, 50, 90, null);
-    }
-    if (choosingUpgrade) {
-    Graphics2D g4 = (Graphics2D) g;
+        if (bossSpawned && boss != null && !boss.isDead()) {
+            Graphics2D gBoss = (Graphics2D) g;
 
-    g4.setColor(new Color(0, 0, 0, 200));
-    g4.fillRect(0, 0, getWidth(), getHeight());
+            int barX = 100;
+            int barY = 20;
+            int barWidth = getWidth() - 200;
+            int barHeight = 28;
 
-    g4.setFont(new Font("Arial", Font.BOLD, 20));
+            gBoss.setColor(Color.DARK_GRAY);
+            gBoss.fillRect(barX, barY, barWidth, barHeight);
 
-    for (int i = 0; i < currentUpgrades.size(); i++) {
-        Upgrade up = currentUpgrades.get(i);
+            double ratio = boss.getHealthValue() / boss.getMaxHealthValue();
+            int filledWidth = (int) (barWidth * ratio);
 
-        int boxX = 150 + i * 200;
-        int boxY = getHeight() / 2 - 50;
+            gBoss.setColor(Color.RED);
+            gBoss.fillRect(barX, barY, filledWidth, barHeight);
 
-        g4.setColor(Color.GRAY);
-        g4.fillRect(boxX, boxY, 150, 100);
+            gBoss.setColor(Color.WHITE);
+            gBoss.drawRect(barX, barY, barWidth, barHeight);
+            gBoss.setFont(new Font("Arial", Font.BOLD, 18));
+            gBoss.drawString("SADNESS CHUCK", barX + 10, barY + 20);
+        }
 
-        g4.setColor(Color.WHITE);
-        g4.drawRect(boxX, boxY, 150, 100);
+        if (choosingUpgrade) {
+            Graphics2D g4 = (Graphics2D) g;
 
-        g4.drawString((i+1) + ": " + up.name, boxX + 10, boxY + 30);
-        g4.setFont(new Font("Comic Sans MS", Font.PLAIN, 14));
-        g4.drawString(up.description, boxX + 10, boxY + 60);
+            g4.setColor(new Color(0, 0, 0, 200));
+            g4.fillRect(0, 0, getWidth(), getHeight());
 
-        g4.setFont(new Font("Comic Sans MS", Font.BOLD, 20));
+            g4.setFont(new Font("Arial", Font.BOLD, 20));
+
+            for (int i = 0; i < currentUpgrades.size(); i++) {
+                Upgrade up = currentUpgrades.get(i);
+
+                int boxX = 150 + i * 200;
+                int boxY = getHeight() / 2 - 50;
+
+                g4.setColor(Color.GRAY);
+                g4.fillRect(boxX, boxY, 150, 100);
+
+                g4.setColor(Color.WHITE);
+                g4.drawRect(boxX, boxY, 150, 100);
+
+                g4.drawString((i + 1) + ": " + up.name, boxX + 10, boxY + 30);
+                g4.setFont(new Font("Arial", Font.PLAIN, 14));
+                g4.drawString(up.description, boxX + 10, boxY + 60);
+
+                g4.setFont(new Font("Arial", Font.BOLD, 20));
+            }
+        }
+
+        if (gameOver) {
+            Graphics2D g3 = (Graphics2D) g;
+
+            g3.setColor(new Color(0, 0, 0, 180));
+            g3.fillRect(0, 0, getWidth(), getHeight());
+
+            g3.setColor(Color.RED);
+            g3.setFont(new Font("Arial", Font.BOLD, 32));
+
+            String line1 = "Chuck lost his balance...";
+            String line2 = "But growth is never linear.";
+            String line3 = "Press R to continue the journey.";
+
+            int w1 = g3.getFontMetrics().stringWidth(line1);
+            int w2 = g3.getFontMetrics().stringWidth(line2);
+            int w3 = g3.getFontMetrics().stringWidth(line3);
+
+            g3.drawString(line1, getWidth() / 2 - w1 / 2, getHeight() / 2 - 40);
+            g3.drawString(line2, getWidth() / 2 - w2 / 2, getHeight() / 2);
+            g3.drawString(line3, getWidth() / 2 - w3 / 2, getHeight() / 2 + 40);
+        }
+
+        if (gameWon) {
+            Graphics2D gWin = (Graphics2D) g;
+
+            gWin.setColor(new Color(0, 0, 0, 180));
+            gWin.fillRect(0, 0, getWidth(), getHeight());
+
+            gWin.setColor(Color.GREEN);
+            gWin.setFont(new Font("Arial", Font.BOLD, 30));
+
+            String text = "You have achieved true self-happiness";
+            int textWidth = gWin.getFontMetrics().stringWidth(text);
+            gWin.drawString(text, getWidth() / 2 - textWidth / 2, getHeight() / 2);
+
+            gWin.setFont(new Font("Arial", Font.BOLD, 18));
+            String restart = "Press R to play again";
+            int restartWidth = gWin.getFontMetrics().stringWidth(restart);
+            gWin.drawString(restart, getWidth() / 2 - restartWidth / 2, getHeight() / 2 + 35);
         }
     }
-
-    player.getHealth().draw(g);
-    
-    player.getPERMA().draw(g);
-
-    if (gameOver) {
-    Graphics2D g3 = (Graphics2D) g;
-
-    g3.setColor(new Color(0, 0, 0, 180));
-    g3.fillRect(0, 0, getWidth(), getHeight());
-
-    g3.setColor(Color.RED);
-    g3.setFont(new Font("Arial", Font.BOLD, 40));
-
-    String text = "Balance Has Been Lost";
-
-    FontMetrics fm = g3.getFontMetrics();
-    int x = (getWidth() - fm.stringWidth(text)) / 2;
-    int y = getHeight() / 2 - 20;
-
-    g3.drawString(text, x, y);
-
-    g3.setFont(new Font("Comic Sans MS", Font.BOLD, 20));
-
-    String restart = "Press R to Restore Balance";
-
-    FontMetrics fm3 = g3.getFontMetrics();
-    int x3 = (getWidth() - fm3.stringWidth(restart)) / 2;
-
-    g3.drawString(restart, x3, y + 40);
-    }
-    
-}
 }

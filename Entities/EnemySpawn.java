@@ -1,7 +1,8 @@
 package Entities;
 
 import Entities.Enemies.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Random;
 
 public class EnemySpawn {
 
@@ -12,7 +13,16 @@ public class EnemySpawn {
     private int screenHeight;
 
     private long lastSpawnTime = 0;
-    private long spawnDelay = 1000; // 1 second
+
+    private long baseSpawnDelay = 1200;
+    private final long minSpawnDelay = 400;
+
+    private long lastDifficultyIncrease = 0;
+    private final long difficultyInterval = 10000;
+    private final long spawnStep = 50;
+
+    private boolean bossMode = false;
+    private final long bossExtraDelay = 600;
 
     private Random random = new Random();
 
@@ -26,41 +36,72 @@ public class EnemySpawn {
     public void update() {
         long currentTime = System.currentTimeMillis();
 
-        if (currentTime - lastSpawnTime > spawnDelay) {
+        if (currentTime - lastDifficultyIncrease >= difficultyInterval) {
+            baseSpawnDelay = Math.max(minSpawnDelay, baseSpawnDelay - spawnStep);
+            lastDifficultyIncrease = currentTime;
+        }
+
+        long currentSpawnDelay = getCurrentSpawnDelay();
+
+        if (currentTime - lastSpawnTime >= currentSpawnDelay) {
             spawnEnemy();
             lastSpawnTime = currentTime;
         }
     }
 
+    private long getCurrentSpawnDelay() {
+        if (bossMode) {
+            return baseSpawnDelay + bossExtraDelay;
+        }
+        return baseSpawnDelay;
+    }
+
+    public void setBossMode(boolean bossMode) {
+        this.bossMode = bossMode;
+    }
+
     private void spawnEnemy() {
-
-        int margin = 100; 
-
-        int side = random.nextInt(3); 
-
+        int margin = 150;
         double spawnX = 0;
         double spawnY = 0;
 
-        switch (side) {
-            case 0:
-                spawnX = player.x + random.nextInt(screenWidth) - screenWidth / 2;
-                spawnY = player.y - screenHeight / 2 - margin;
-                break;
+        double playerCenterX = player.x + player.width / 2.0;
+        double playerCenterY = player.y + player.height / 2.0;
 
-            case 1:
-                spawnX = player.x + random.nextInt(screenWidth) - screenWidth / 2;
-                spawnY = player.y + screenHeight / 2 + margin;
-                break;
+        boolean validSpawn = false;
 
-            case 2: 
-                spawnX = player.x - screenWidth / 2 - margin;
-                spawnY = player.y + random.nextInt(screenHeight) - screenHeight / 2;
-                break;
+        while (!validSpawn) {
+            int side = random.nextInt(4);
 
-            case 3: 
-                spawnX = player.x + screenWidth / 2 + margin;
-                spawnY = player.y + random.nextInt(screenHeight) - screenHeight / 2;
-                break;
+            switch (side) {
+                case 0: // top
+                    spawnX = player.x + random.nextInt(screenWidth + 200) - (screenWidth / 2 + 100);
+                    spawnY = player.y - screenHeight / 2.0 - margin;
+                    break;
+
+                case 1: // bottom
+                    spawnX = player.x + random.nextInt(screenWidth + 200) - (screenWidth / 2 + 100);
+                    spawnY = player.y + screenHeight / 2.0 + margin;
+                    break;
+
+                case 2: // left
+                    spawnX = player.x - screenWidth / 2.0 - margin;
+                    spawnY = player.y + random.nextInt(screenHeight + 200) - (screenHeight / 2 + 100);
+                    break;
+
+                case 3: // right
+                    spawnX = player.x + screenWidth / 2.0 + margin;
+                    spawnY = player.y + random.nextInt(screenHeight + 200) - (screenHeight / 2 + 100);
+                    break;
+            }
+
+            double dx = spawnX - playerCenterX;
+            double dy = spawnY - playerCenterY;
+            double distance = Math.sqrt(dx * dx + dy * dy);
+
+            if (distance > 300) {
+                validSpawn = true;
+            }
         }
 
         Enemy newEnemy = createRandomEnemy(spawnX, spawnY);
@@ -68,17 +109,22 @@ public class EnemySpawn {
     }
 
     private Enemy createRandomEnemy(double x, double y) {
-        int type = random.nextInt(5);
-
+        int roll = random.nextInt(100);
         Enemy e;
 
-        switch (type) {
-            case 0: e = new ZynDemon(); break;
-            case 1: e = new FireSpitter(); break;
-            case 2: e = new SpeedyGonzales(); break;
-            case 3: e = new LonelyGhost(); break;
-            default: e = new DoubtPhantom(); break;
-        }       
+        if (roll < 8) {
+            e = new FireSpitter();
+        } else if (roll < 38) {
+            e = new SpeedyGonzales();
+        } else if (roll < 58) {
+            e = new LonelyGhost();
+        } else if (roll < 73) {
+            e = new DoubtPhantom();
+        } else if (roll < 86) {
+            e = new Sadness();
+        } else {
+            e = new ZynDemon();
+        }
 
         e.setX(x);
         e.setY(y);
