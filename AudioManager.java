@@ -3,10 +3,12 @@ import java.io.File;
 
 public class AudioManager {
 
-    private Clip introClip;
-    private Clip loopClip;
+    private static Clip introClip;
+    private static Clip loopClip;
+    private static Clip clip;
+    private static Clip warning;
 
-    public void playMusic(String introPath, String loopPath) {
+    public static void playMusic(String introPath, String loopPath) {
         try {
             introClip = AudioSystem.getClip();
             introClip.open(AudioSystem.getAudioInputStream(new File(introPath)));
@@ -27,8 +29,33 @@ public class AudioManager {
             e.printStackTrace();
         }
     }
+    //play for boss music
+    public static void playClip(String path) {
+        try {
+            warning = AudioSystem.getClip();
+            warning.open(AudioSystem.getAudioInputStream(new File(path)));
+            warning.start();
 
-    public void stopMusic() {
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public static void playBossMusic(String path) {
+        stopMusic();
+        try {
+            clip = AudioSystem.getClip();
+            clip.open(AudioSystem.getAudioInputStream(new File(path)));
+
+            clip.setFramePosition(0);
+            clip.loop(Clip.LOOP_CONTINUOUSLY);
+
+            clip.start();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public static void stopMusic() {
         if (introClip != null) introClip.stop();
         if (loopClip != null) loopClip.stop();
     }

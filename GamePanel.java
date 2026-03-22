@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 import javax.imageio.ImageIO;
+import javax.sound.sampled.AudioInputStream;
 import javax.swing.*;
 
 public class GamePanel extends JPanel implements Runnable {
@@ -86,8 +87,8 @@ public class GamePanel extends JPanel implements Runnable {
 
         powerUps.add(new PowerUp(spawnX, spawnY, randomType));
     }
-
     private void triggerBossPhase() {
+        AudioManager.playClip("src/assets/Laboratory Alarm.wav");
         bossTriggered = true;
         bossIncoming = true;
         bossSpawned = false;
@@ -96,6 +97,8 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     private void spawnBoss() {
+        
+        
         double bossX = player.x + 450;
         double bossY = player.y - 200;
 
@@ -163,6 +166,9 @@ public class GamePanel extends JPanel implements Runnable {
                 }
 
                 if (bossSpawned && boss != null && boss.isDead()) {
+                    AudioManager.stopMusic();
+                    AudioManager.playClip("src/assets/kidsCheering.wav");
+
                     boss = null;
                     bossSpawned = false;
                     gameWon = true;
