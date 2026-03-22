@@ -14,7 +14,7 @@ public class LonelyGhost extends Enemy {
         enemyImage = setSprite();
         width = enemyImage.getWidth() / 20;
         height = enemyImage.getHeight() / 20;
-        speed = 1.5;
+        speed = 2.0;
     }
 
     @Override

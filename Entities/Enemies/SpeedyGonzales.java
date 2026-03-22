@@ -14,7 +14,7 @@ public class SpeedyGonzales extends Enemy {
         enemyImage = setSprite();
         width = enemyImage.getWidth() / 4;
         height = enemyImage.getHeight() / 4;
-        speed = 2.5;
+        speed = 3.0;
     }
 
     @Override

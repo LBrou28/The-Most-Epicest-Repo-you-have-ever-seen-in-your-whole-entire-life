@@ -14,7 +14,7 @@ public class ZynDemon extends Enemy {
         enemyImage = setSprite();
         width = enemyImage.getWidth() / 8;
         height = enemyImage.getHeight() / 8;
-        speed = 1.2;
+        speed = 1.8;
     }
 
     @Override

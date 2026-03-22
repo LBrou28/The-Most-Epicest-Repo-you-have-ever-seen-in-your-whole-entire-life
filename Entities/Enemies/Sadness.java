@@ -10,7 +10,7 @@ public class Sadness extends Enemy {
         enemyImage = setSprite();
         width = enemyImage.getWidth() / 6;
         height = enemyImage.getHeight() / 6;
-        speed = 1.5;
+        speed = 2.0;
     }
     public BufferedImage setSprite() {
         return sprites.get(3);

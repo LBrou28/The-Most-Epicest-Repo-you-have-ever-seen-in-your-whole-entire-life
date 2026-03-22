@@ -14,8 +14,8 @@ public class EnemySpawn {
 
     private long lastSpawnTime = 0;
 
-    private long baseSpawnDelay = 1200;
-    private final long minSpawnDelay = 400;
+    private long baseSpawnDelay = 900;
+    private final long minSpawnDelay = 200;
 
     private long lastDifficultyIncrease = 0;
     private final long difficultyInterval = 10000;
