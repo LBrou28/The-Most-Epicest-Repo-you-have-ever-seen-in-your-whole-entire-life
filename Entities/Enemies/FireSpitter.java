@@ -14,7 +14,7 @@ public class FireSpitter extends Enemy {
         enemyImage = setSprite();
         width = enemyImage.getWidth() / 8;
         height = enemyImage.getHeight() / 8;
-        speed = 1.0;
+        speed = 2.0;
     }
 
     @Override

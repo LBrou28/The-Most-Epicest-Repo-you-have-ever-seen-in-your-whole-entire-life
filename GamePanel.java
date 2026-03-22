@@ -362,10 +362,11 @@ public class GamePanel extends JPanel implements Runnable {
         if (bossSpawned && boss != null && !boss.isDead()) {
             Graphics2D gBoss = (Graphics2D) g;
 
-            int barX = 100;
-            int barY = 20;
-            int barWidth = getWidth() - 200;
-            int barHeight = 28;
+            int barWidth = 900; 
+            int barHeight = 20;
+
+            int barX = (getWidth() - barWidth) / 2; 
+            int barY = 25; 
 
             gBoss.setColor(Color.DARK_GRAY);
             gBoss.fillRect(barX, barY, barWidth, barHeight);

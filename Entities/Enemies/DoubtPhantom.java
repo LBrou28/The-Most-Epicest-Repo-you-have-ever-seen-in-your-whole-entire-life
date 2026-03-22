@@ -14,7 +14,7 @@ public class DoubtPhantom extends Enemy {
         enemyImage = setSprite();
         width = enemyImage.getWidth() / 16;
         height = enemyImage.getHeight() / 16;
-        speed = 1.5;
+        speed = 2.0;
     }
 
 @Override
