@@ -41,7 +41,7 @@ public class FireSpitter extends Enemy {
             dx /= dist;
             dy /= dist;
 
-            projectiles.add(new Projectile(
+            projectiles.add(new FireballProjectile(
                 this.getX() + this.getWidth() / 2.0,
                 this.getY() + this.getHeight() / 2.0,
                 dx, dy
