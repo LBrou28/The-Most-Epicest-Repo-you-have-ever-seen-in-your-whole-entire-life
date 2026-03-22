@@ -30,11 +30,6 @@ public class FireSpitter extends Enemy {
     }
 
     private BufferedImage setSprite() {
-        try {
-            return ImageIO.read(getClass().getResourceAsStream("EnemyImages/demon.png"));
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
+        return sprites.get(1);
     }
 }

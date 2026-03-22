@@ -33,11 +33,9 @@ public void attack(Player player) {
 }
 
     private BufferedImage setSprite() {
-        try {
-            return ImageIO.read(getClass().getResourceAsStream("EnemyImages/DoubtPhantom.png"));
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
+        
+            //return ImageIO.read(getClass().getResourceAsStream("EnemyImages/DoubtPhantom.png"));
+            return sprites.get(0);
+        
     }
 }
