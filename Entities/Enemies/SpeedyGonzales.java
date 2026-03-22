@@ -2,6 +2,8 @@ package Entities.Enemies;
 
 import Entities.*;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 
 /* This enemy represents lack of focus. Drains Engagement */
 public class SpeedyGonzales extends Enemy {
@@ -22,12 +24,18 @@ public class SpeedyGonzales extends Enemy {
         long time = System.currentTimeMillis();
 
         if (time - lastDrainTime > 800) {
-            player.getPERMA().increase("E", -5); 
+            super.attack(player);
+            player.getPERMA().increase("E", -5);
             lastDrainTime = time;
         }
     }
 
     private BufferedImage setSprite() {
-       return sprites.get(4);
+        try {
+            return ImageIO.read(getClass().getResourceAsStream("EnemyImages/sadness.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

@@ -2,6 +2,8 @@ package Entities.Enemies;
 
 import Entities.*;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 
 /* This enemy represents addiction. Drains accomplishment */
 public class ZynDemon extends Enemy {
@@ -14,7 +16,7 @@ public class ZynDemon extends Enemy {
         enemyImage = setSprite();
         width = enemyImage.getWidth() / 8;
         height = enemyImage.getHeight() / 8;
-        speed = 1.8;
+        speed = 2.0;
     }
 
     @Override
@@ -22,12 +24,18 @@ public class ZynDemon extends Enemy {
         long time = System.currentTimeMillis();
 
         if (time - lastDrainTime > 1200) {
-            player.getPERMA().increase("A", -5); 
+            super.attack(player);
+            player.getPERMA().increase("A", -5);
             lastDrainTime = time;
         }
     }
 
     private BufferedImage setSprite() {
-        return sprites.get(5);
+        try {
+            return ImageIO.read(getClass().getResourceAsStream("EnemyImages/Zyn.jpg"));
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

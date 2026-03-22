@@ -139,8 +139,8 @@ public class GamePanel extends JPanel implements Runnable {
                 for (Enemy e : enemies) {
                     e.update(player);
 
-                    if (Enemy.checkCollision(e, player)) {
-                        e.attack(player);
+                   if (Enemy.checkCollision(e, player)) {
+                     e.attack(player);
                     }
                 }
 
