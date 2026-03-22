@@ -6,7 +6,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-public abstract class Enemy {
+public abstract class Enemy extends ImageInterface {
     protected double xPos, yPos, damage, health, speed;
     protected int width, height;
 

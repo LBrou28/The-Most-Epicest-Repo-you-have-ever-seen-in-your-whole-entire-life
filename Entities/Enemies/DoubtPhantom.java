@@ -32,11 +32,6 @@ public class DoubtPhantom extends Enemy {
     }
 
     private BufferedImage setSprite() {
-        try {
-            return ImageIO.read(getClass().getResourceAsStream("EnemyImages/DoubtPhantom.png"));
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
+        return sprites.get(0);
     }
 }
