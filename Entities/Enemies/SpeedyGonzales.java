@@ -30,11 +30,6 @@ public class SpeedyGonzales extends Enemy {
     }
 
     private BufferedImage setSprite() {
-        try {
-            return ImageIO.read(getClass().getResourceAsStream("EnemyImages/sadness.png"));
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
+       return sprites.get(4);
     }
 }

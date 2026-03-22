@@ -15,13 +15,7 @@ public class Sadness extends Enemy {
         speed = 1.0;
     }
     public BufferedImage setSprite() {
-        BufferedImage enemy = null;
-        try {
-            enemy = ImageIO.read(getClass().getResourceAsStream("EnemyImages/sadghost.png"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return enemy;
+        return sprites.get(3);
     }
     public void attack(Player player) {
 
