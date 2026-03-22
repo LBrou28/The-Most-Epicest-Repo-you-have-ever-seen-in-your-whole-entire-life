@@ -10,6 +10,8 @@ public class Player {
     int speed = 3;
     double dashSpeed = 10;
 
+    private PlayerHealth health = new PlayerHealth(100);
+
     ArrayList<Projectile> projectiles;
     ArrayList<Enemy> enemies;
 
@@ -76,6 +78,7 @@ public class Player {
             lastShotTime = currentTime;
         }
         checkBulletCollision();
+        health.update(false); 
     }
 
     private Enemy getClosestEnemyInRange() {
@@ -157,4 +160,8 @@ public class Player {
         }
     }
 }
+
+public PlayerHealth getHealth() {
+        return health;
+    }
 }

@@ -8,7 +8,7 @@ import java.io.*;
 import java.util.*;
 import javax.imageio.ImageIO;
 import javax.swing.*;
-
+import Entities.PlayerHealth;
 public class GamePanel extends JPanel implements Runnable {
 
     BufferedImage chuck, grass;
@@ -117,5 +117,14 @@ protected void paintComponent(Graphics g) {
     if (chuck != null) {
         g.drawImage(chuck, centerX - 16, centerY - 32, 50, 90, null);
     }
+
+    // ✅ UI (always draw last)
+    player.getHealth().draw(g);
+    if (chuck != null) {
+    g.drawImage(chuck, centerX - 16, centerY - 32, 50, 90, null);
+    }
+
+    // ✅ DRAW HEALTH BAR LAST (top-left UI)
+    player.getHealth().draw(g);
 }
 }
