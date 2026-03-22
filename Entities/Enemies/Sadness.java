@@ -10,8 +10,8 @@ public class Sadness extends Enemy {
     public Sadness() {
         super(Math.random() * 250, Math.random() * 250, 5, 6);
         enemyImage = setSprite();
-        width = enemyImage.getWidth() / 16;
-        height = enemyImage.getHeight() / 16;
+        width = enemyImage.getWidth() / 4;
+        height = enemyImage.getHeight() / 4;
         speed = 2.0;
     }
 

@@ -14,8 +14,8 @@ public class ZynDemon extends Enemy {
         super(Math.random() * 250, Math.random() * 250, 5, 6);
 
         enemyImage = setSprite();
-        width = enemyImage.getWidth() / 8;
-        height = enemyImage.getHeight() / 8;
+        width = enemyImage.getWidth() / 12;
+        height = enemyImage.getHeight() / 12;
         speed = 2.0;
     }
 
@@ -32,7 +32,7 @@ public class ZynDemon extends Enemy {
 
     private BufferedImage setSprite() {
         try {
-            return ImageIO.read(getClass().getResourceAsStream("EnemyImages/Zyn.jpg"));
+            return ImageIO.read(getClass().getResourceAsStream("EnemyImages/Witch.png"));
         } catch (IOException e) {
             e.printStackTrace();
             return null;
