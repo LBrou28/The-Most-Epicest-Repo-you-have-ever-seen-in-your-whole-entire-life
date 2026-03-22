@@ -10,7 +10,7 @@ public class PlayerHealth {
     private boolean isDead = false;
     private boolean isDashing = false;
 
-    // Flash effect
+
     private boolean flashing = false;
     private long flashStartTime = 0;
     private long flashDuration = 100; // milliseconds
@@ -20,13 +20,11 @@ public class PlayerHealth {
         this.currentHealth = maxHealth;
     }
 
-    // Call every frame
     public void update(boolean isDashing) {
         this.isDashing = isDashing;
 
         isDead = currentHealth <= 0;
 
-        // stop flashing after duration
         if (flashing && System.currentTimeMillis() - flashStartTime > flashDuration) {
             flashing = false;
         }
@@ -74,7 +72,6 @@ public class PlayerHealth {
         flashStartTime = System.currentTimeMillis();
     }
 
-    // 🎨 Draw health bar in TOP-LEFT (UI space)
     public void draw(Graphics g) {
 
         int barX = 20;
@@ -83,31 +80,26 @@ public class PlayerHealth {
         int barWidth = 200;
         int barHeight = 20;
 
-        // background
         g.setColor(Color.DARK_GRAY);
         g.fillRect(barX, barY, barWidth, barHeight);
 
-        // health width
         int healthWidth = (int) ((currentHealth / maxHealth) * barWidth);
 
-        // gradient color (green → red)
         float ratio = (float) (currentHealth / maxHealth);
         Color healthColor = new Color(1 - ratio, ratio, 0);
 
         g.setColor(healthColor);
         g.fillRect(barX, barY, healthWidth, barHeight);
 
-        // border
         g.setColor(Color.BLACK);
         g.drawRect(barX, barY, barWidth, barHeight);
 
-        // flash overlay
+
         if (flashing) {
             g.setColor(new Color(255, 255, 255, 120));
             g.fillRect(barX, barY, barWidth, barHeight);
         }
 
-        // text
         g.setColor(Color.WHITE);
         g.setFont(new Font("Arial", Font.BOLD, 14));
         g.drawString((int) currentHealth + " / " + (int) maxHealth, barX + 60, barY + 15);
