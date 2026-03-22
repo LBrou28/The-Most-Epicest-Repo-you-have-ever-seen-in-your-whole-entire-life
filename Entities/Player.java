@@ -25,7 +25,7 @@ public class Player {
         long lastShotTime = 0;
         long shootCooldown = 500;
         double shootRadius = 150;
-        double damage = 1;
+        double damage = 3;
         
         InputHandler input;
 

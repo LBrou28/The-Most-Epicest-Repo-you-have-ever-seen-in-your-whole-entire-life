@@ -14,8 +14,8 @@ public class FireSpitter extends Enemy {
         super(Math.random() * 250, Math.random() * 250, 3, 25);
 
         enemyImage = setSprite();
-        width = enemyImage.getWidth() / 4;
-        height = enemyImage.getHeight() / 4;
+        width = enemyImage.getWidth() / 8;
+        height = enemyImage.getHeight() / 8;
         speed = 1.5;
     }
 

@@ -14,8 +14,8 @@ public class LonelyGhost extends Enemy {
         super(Math.random() * 250, Math.random() * 250, 2, 25);
 
         enemyImage = setSprite();
-        width = enemyImage.getWidth() / 6;
-        height = enemyImage.getHeight() / 6;
+        width = enemyImage.getWidth() / 8;
+        height = enemyImage.getHeight() / 8;
         speed = 1.5;
     }
 

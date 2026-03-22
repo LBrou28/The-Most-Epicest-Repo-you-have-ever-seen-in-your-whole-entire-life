@@ -14,8 +14,8 @@ public class DoubtPhantom extends Enemy {
         super(Math.random() * 250, Math.random() * 250, 2, 30);
 
         enemyImage = setSprite();
-        width = enemyImage.getWidth() / 6;
-        height = enemyImage.getHeight() / 6;
+        width = enemyImage.getWidth() / 8;
+        height = enemyImage.getHeight() / 8;
         speed = 2.0;
     }
 
