@@ -43,8 +43,8 @@ public class StartPanel extends JPanel {
             }
             startButtonSound.addLineListener(event -> {
                 if (event.getType() == LineEvent.Type.STOP) {
-                    AudioManager music = new AudioManager();
-                    music.playMusic("src/assets/rockintro.wav", "src/assets/rockloop.wav");
+                    
+                    AudioManager.playMusic("src/assets/rockintro.wav", "src/assets/rockloop.wav");
                 }
             });
             GamePanel gamePanel = new GamePanel();
