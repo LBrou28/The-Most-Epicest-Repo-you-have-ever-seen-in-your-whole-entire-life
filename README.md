@@ -1,4 +1,4 @@
-Chuck Norris Against Evil : Team [Your Team Number]
+Chuck Norris Against Evil : Team i6
 Members
 
 Project Manager: Luke ([LBrou28])
@@ -9,7 +9,7 @@ Quality Assurance Tester: Joseph Pena ([GitHub Name])
 
 About Our Software
 
-Chuck Norris Against Evil is a 2D survival-style Java game where the player controls Chuck Norris and fights off waves of enemies. The player automatically attacks nearby enemies while navigating the world, collecting powerups, and avoiding collisions.
+Chuck Norris Against Evil is a 2D survival-style Java game where the player controls Chuck Norris and fights off waves of enemies. The player automatically attacks nearby enemies while navigating the world, collecting powerups, and avoiding collisions. (most of the "full" game is located in the backup branch)
 
 The game features:
 
