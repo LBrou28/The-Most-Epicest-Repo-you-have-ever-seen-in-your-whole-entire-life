@@ -2,8 +2,6 @@ package Entities.Enemies;
 
 import Entities.*;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import javax.imageio.ImageIO;
 
 /*this enemy represents his anger. Drains happiness. */
 public class FireSpitter extends Enemy {
@@ -11,12 +9,12 @@ public class FireSpitter extends Enemy {
     private long lastBurnTime = 0;
 
     public FireSpitter() {
-        super(Math.random() * 250, Math.random() * 250, 3, 25);
+        super(Math.random() * 250, Math.random() * 250, 3, 9);
 
         enemyImage = setSprite();
         width = enemyImage.getWidth() / 8;
         height = enemyImage.getHeight() / 8;
-        speed = 1.5;
+        speed = 1.0;
     }
 
     @Override

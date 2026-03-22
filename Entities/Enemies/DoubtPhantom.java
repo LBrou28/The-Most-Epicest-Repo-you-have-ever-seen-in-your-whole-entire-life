@@ -2,8 +2,6 @@ package Entities.Enemies;
 
 import Entities.*;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import javax.imageio.ImageIO;
 
 /*this enemy reduces the meaning of Chuck. */
 public class DoubtPhantom extends Enemy {
@@ -11,12 +9,12 @@ public class DoubtPhantom extends Enemy {
     private long lastDebuffTime = 0;
 
     public DoubtPhantom() {
-        super(Math.random() * 250, Math.random() * 250, 2, 30);
+        super(Math.random() * 250, Math.random() * 250, 2, 6);
 
         enemyImage = setSprite();
-        width = enemyImage.getWidth() / 8;
-        height = enemyImage.getHeight() / 8;
-        speed = 2.0;
+        width = enemyImage.getWidth() / 16;
+        height = enemyImage.getHeight() / 16;
+        speed = 1.5;
     }
 
 @Override
