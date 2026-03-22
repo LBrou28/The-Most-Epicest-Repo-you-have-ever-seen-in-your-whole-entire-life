@@ -2,10 +2,10 @@ Chuck Norris Against Evil : Team i6
 Members
 
 Project Manager: Luke ([LBrou28])
-Communications Lead: Trey Menasco ([GitHub Name])
-Git Master: Jordan ([GitHub Name])
-Design Lead: Hannah Lowery ([GitHub Name])
-Quality Assurance Tester: Joseph Pena ([GitHub Name])
+Communications Lead: Trey Menasco ([TreyMenasco])
+Git Master: Jordan Acuri([jarcur1])
+Design Lead: Hannah Lowery ([HannahLowery])
+Quality Assurance Tester: Joseph Pena ([Jadam111305])
 
 About Our Software
 
