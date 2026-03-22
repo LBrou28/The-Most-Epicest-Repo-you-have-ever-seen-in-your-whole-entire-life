@@ -14,8 +14,8 @@ public class LonelyGhost extends Enemy {
         super(Math.random() * 250, Math.random() * 250, 2, 25);
 
         enemyImage = setSprite();
-        width = enemyImage.getWidth() / 4;
-        height = enemyImage.getHeight() / 4;
+        width = enemyImage.getWidth() / 6;
+        height = enemyImage.getHeight() / 6;
         speed = 1.5;
     }
 
@@ -24,7 +24,7 @@ public class LonelyGhost extends Enemy {
         long time = System.currentTimeMillis();
 
         if (time - lastDrainTime > 1000) {
-            player.getPERMA().increase("R", -5); // 👻 loneliness
+            player.getPERMA().increase("R", -5); 
             lastDrainTime = time;
         }
     }

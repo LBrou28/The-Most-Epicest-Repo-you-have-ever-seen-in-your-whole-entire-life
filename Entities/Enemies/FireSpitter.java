@@ -24,7 +24,7 @@ public class FireSpitter extends Enemy {
         long time = System.currentTimeMillis();
 
         if (time - lastBurnTime > 1000) {
-            player.getPERMA().increase("P", -5); // 🔥 burns happiness
+            player.getPERMA().increase("P", -5); 
             lastBurnTime = time;
         }
     }

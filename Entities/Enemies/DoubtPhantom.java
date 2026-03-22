@@ -14,20 +14,23 @@ public class DoubtPhantom extends Enemy {
         super(Math.random() * 250, Math.random() * 250, 2, 30);
 
         enemyImage = setSprite();
-        width = enemyImage.getWidth() / 4;
-        height = enemyImage.getHeight() / 4;
+        width = enemyImage.getWidth() / 6;
+        height = enemyImage.getHeight() / 6;
         speed = 2.0;
     }
 
-    @Override
-    public void attack(Player player) {
-        long time = System.currentTimeMillis();
+@Override
+public void attack(Player player) {
+    long time = System.currentTimeMillis();
 
-        if (time - lastDebuffTime > 1500) {
-            player.getPERMA().increase("M", -5); 
-            lastDebuffTime = time;
-        }
+    if (time - lastDebuffTime > 1500) {
+
+        player.getPERMA().increase("M", -5);
+        player.setDamage(Math.max(0.5, player.getDamage() - 0.2));
+
+        lastDebuffTime = time;
     }
+}
 
     private BufferedImage setSprite() {
         try {
