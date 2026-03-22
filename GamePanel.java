@@ -1,9 +1,14 @@
 import Entities.Enemies.*;
+import Entities.EnemySpawn;
 import Entities.Player;
 import Entities.PowerUp;
 import Entities.PowerUpType;
 import Entities.Projectile;
+import Entities.UpgradeManager;
 import Entities.PlayerHealth;
+import Entities.Upgrade;
+import Entities.UpgradeType;
+import Entities.UpgradeManager;
 import Input.InputHandler;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -30,6 +35,12 @@ public class GamePanel extends JPanel implements Runnable {
     private InputHandler input;
     private Player player;
 
+    private EnemySpawn spawner;
+    private boolean gameOver = false;
+
+    private boolean choosingUpgrade = false;
+    private ArrayList<Upgrade> currentUpgrades = new ArrayList<>();
+
     public GamePanel() {
         this.setPreferredSize(new Dimension(800, 600));
         this.setBackground(Color.white);
@@ -41,6 +52,8 @@ public class GamePanel extends JPanel implements Runnable {
         SwingUtilities.invokeLater(() -> requestFocusInWindow());
 
         player = new Player(input, projectiles, enemies);
+
+        spawner = new EnemySpawn(player, enemies, 800, 600);
 
         try {
             chuck = ImageIO.read(new File("src/assets/Chuck.png"));
@@ -72,11 +85,18 @@ public class GamePanel extends JPanel implements Runnable {
     @Override
 public void run() {
     while (running) {
-
-        player.update();
+        if (!gameOver && !choosingUpgrade) {
+            player.update();
+            spawner.update();
+        }
 
         long currentTime = System.currentTimeMillis();
 
+        if (player.getHealth().isDead()) {
+            gameOver = true;
+        }
+
+        if (!gameOver) {
         if (currentTime - lastPowerUpSpawnTime > powerUpSpawnCooldown) {
             spawnRandomPowerUp();
             lastPowerUpSpawnTime = currentTime;
@@ -94,10 +114,17 @@ public void run() {
 
         for (Enemy e : enemies) {
             e.update(player);
+
+            if (Enemy.checkCollision(e, player)) {
+            e.attack(player);  
+            player.takeDamage(5);
         }
+}
 
         separateEnemiesFromPlayer();
         separateEnemies();
+
+        spawner.update();
 
         for (int i = 0; i < projectiles.size(); i++) {
             Projectile p = projectiles.get(i);
@@ -108,7 +135,7 @@ public void run() {
                 i--;
             }
         }
-
+    }
         repaint();
 
         try {
@@ -116,7 +143,17 @@ public void run() {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    if (choosingUpgrade) {
+        if (input.up) selectUpgrade(0);
+        if (input.left) selectUpgrade(1);
+        if (input.right) selectUpgrade(2);
+    }   
+
+    if (gameOver && input.restart) {
+        resetGame();
+        }
     }
+
 }
 
     private void separateEnemiesFromPlayer() {
@@ -192,8 +229,34 @@ public void run() {
         }
     }
 
+    private void openUpgradeMenu() {
+        choosingUpgrade = true;
+        currentUpgrades.clear();
+
+        for (int i = 0; i < 3; i++) {
+        currentUpgrades.add(UpgradeManager.getRandomUpgrade());
+        }
+    }
+    private void resetGame() {
+    enemies.clear();
+    projectiles.clear();
+    powerUps.clear();
+
+    player = new Player(input, projectiles, enemies);
+
+    spawner = new EnemySpawn(player, enemies, getWidth(), getHeight());
+
+    gameOver = false;
+    }
+    private void selectUpgrade(int index) {
+        if (index >= 0 && index < currentUpgrades.size()) {
+            player.applyUpgrade(currentUpgrades.get(index));
+            choosingUpgrade = false;
+        }
+    }
+
     @Override
-protected void paintComponent(Graphics g) {
+    protected void paintComponent(Graphics g) {
     super.paintComponent(g);
 
     int centerX = getWidth() / 2;
@@ -222,8 +285,8 @@ protected void paintComponent(Graphics g) {
         e.draw(g, player, getWidth(), getHeight());
 
         if (Enemy.checkCollision(e, player)) {
-            System.out.println("collision located");
-        }
+            player.takeDamage(5); 
+}
     }
 
     for (PowerUp p : powerUps) {
@@ -248,13 +311,64 @@ protected void paintComponent(Graphics g) {
     g.drawImage(chuck, centerX - 16, centerY - 32, 50, 90, null);
     }
 
-    // ✅ UI (always draw last)
-    player.getHealth().draw(g);
     if (chuck != null) {
     g.drawImage(chuck, centerX - 16, centerY - 32, 50, 90, null);
     }
+    if (choosingUpgrade) {
+    Graphics2D g4 = (Graphics2D) g;
 
-    // ✅ DRAW HEALTH BAR LAST (top-left UI)
+    // dark overlay
+    g4.setColor(new Color(0, 0, 0, 200));
+    g4.fillRect(0, 0, getWidth(), getHeight());
+
+    g4.setFont(new Font("Arial", Font.BOLD, 20));
+
+    for (int i = 0; i < currentUpgrades.size(); i++) {
+        Upgrade up = currentUpgrades.get(i);
+
+        int boxX = 150 + i * 200;
+        int boxY = getHeight() / 2 - 50;
+
+        // box
+        g4.setColor(Color.GRAY);
+        g4.fillRect(boxX, boxY, 150, 100);
+
+        g4.setColor(Color.WHITE);
+        g4.drawRect(boxX, boxY, 150, 100);
+
+        // text
+        g4.drawString((i+1) + ": " + up.name, boxX + 10, boxY + 30);
+        g4.setFont(new Font("Arial", Font.PLAIN, 14));
+        g4.drawString(up.description, boxX + 10, boxY + 60);
+
+        g4.setFont(new Font("Arial", Font.BOLD, 20));
+        }
+    }
+
     player.getHealth().draw(g);
+    
+    player.getPERMA().draw(g);
+
+    if (gameOver) {
+    Graphics2D g3 = (Graphics2D) g;
+
+    g3.setColor(new Color(0, 0, 0, 180));
+    g3.fillRect(0, 0, getWidth(), getHeight());
+
+    g3.setColor(Color.RED);
+    g3.setFont(new Font("Arial", Font.BOLD, 50));
+
+    String text = "Chuck lost his balance...\r\n" +"\r\n" + "But growth is never linear.\r\n" + "\r\n" + "Press R to continue the journey.";
+    int textWidth = g3.getFontMetrics().stringWidth(text);
+
+    g3.drawString(text, getWidth()/2 - textWidth/2, getHeight()/2 - 20);
+
+    g3.setFont(new Font("Arial", Font.BOLD, 20));
+    String restart = "Press R to Restart";
+    int rWidth = g3.getFontMetrics().stringWidth(restart);
+
+    g3.drawString(restart, getWidth()/2 - rWidth/2, getHeight()/2 + 20);
+    }
+    
 }
 }

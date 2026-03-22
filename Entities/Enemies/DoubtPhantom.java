@@ -5,33 +5,33 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
-/*this enemy represents his anger. Drains happiness. */
-public class FireSpitter extends Enemy {
+/*this enemy reduces the meaning of Chuck. */
+public class DoubtPhantom extends Enemy {
 
-    private long lastBurnTime = 0;
+    private long lastDebuffTime = 0;
 
-    public FireSpitter() {
-        super(Math.random() * 250, Math.random() * 250, 3, 25);
+    public DoubtPhantom() {
+        super(Math.random() * 250, Math.random() * 250, 2, 30);
 
         enemyImage = setSprite();
         width = enemyImage.getWidth() / 4;
         height = enemyImage.getHeight() / 4;
-        speed = 1.5;
+        speed = 2.0;
     }
 
     @Override
     public void attack(Player player) {
         long time = System.currentTimeMillis();
 
-        if (time - lastBurnTime > 1000) {
-            player.getPERMA().increase("P", -5); // 🔥 burns happiness
-            lastBurnTime = time;
+        if (time - lastDebuffTime > 1500) {
+            player.getPERMA().increase("M", -5); 
+            lastDebuffTime = time;
         }
     }
 
     private BufferedImage setSprite() {
         try {
-            return ImageIO.read(getClass().getResourceAsStream("EnemyImages/demon.png"));
+            return ImageIO.read(getClass().getResourceAsStream("EnemyImages/DoubtPhantom.png"));
         } catch (IOException e) {
             e.printStackTrace();
             return null;

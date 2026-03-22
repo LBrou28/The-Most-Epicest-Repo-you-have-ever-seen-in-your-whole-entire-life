@@ -5,13 +5,13 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
-/*this enemy represents his anger. Drains happiness. */
-public class FireSpitter extends Enemy {
+/* this enemy represents loniliness. Drains relationships */
+public class LonelyGhost extends Enemy {
 
-    private long lastBurnTime = 0;
+    private long lastDrainTime = 0;
 
-    public FireSpitter() {
-        super(Math.random() * 250, Math.random() * 250, 3, 25);
+    public LonelyGhost() {
+        super(Math.random() * 250, Math.random() * 250, 2, 25);
 
         enemyImage = setSprite();
         width = enemyImage.getWidth() / 4;
@@ -23,15 +23,15 @@ public class FireSpitter extends Enemy {
     public void attack(Player player) {
         long time = System.currentTimeMillis();
 
-        if (time - lastBurnTime > 1000) {
-            player.getPERMA().increase("P", -5); // 🔥 burns happiness
-            lastBurnTime = time;
+        if (time - lastDrainTime > 1000) {
+            player.getPERMA().increase("R", -5); // 👻 loneliness
+            lastDrainTime = time;
         }
     }
 
     private BufferedImage setSprite() {
         try {
-            return ImageIO.read(getClass().getResourceAsStream("EnemyImages/demon.png"));
+            return ImageIO.read(getClass().getResourceAsStream("EnemyImages/Loneliness.png"));
         } catch (IOException e) {
             e.printStackTrace();
             return null;

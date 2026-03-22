@@ -29,6 +29,10 @@ public class Player {
         
         InputHandler input;
 
+        private long lastDamageTime = 0;
+        private long damageCooldown = 500;
+        private PERMA perma = new PERMA();
+
     public Player(InputHandler input, ArrayList<Projectile> projectiles, ArrayList<Enemy> enemies) {
         this.input = input;
         this.projectiles = projectiles;
@@ -49,7 +53,10 @@ public class Player {
 
         long currentTime = System.currentTimeMillis();
 
-        // DASH
+        speed = 3 + perma.E * 0.02;
+        damage = 1 + perma.M * 0.05;
+        shootCooldown = Math.max(100, 500 - perma.E * 2);
+
         if (input.dash && !isDashing && (currentTime - lastDashTime > dashCooldown)) {
             isDashing = true;
             dashTime = currentTime;
@@ -71,7 +78,6 @@ public class Player {
             y += dy * currentSpeed;
         }
 
-        // AUTO AIM SHOOT
         Enemy closestEnemy = getClosestEnemyInRange();
 
         if (closestEnemy != null && currentTime - lastShotTime > shootCooldown) {
@@ -79,7 +85,7 @@ public class Player {
             lastShotTime = currentTime;
         }
         checkBulletCollision();
-        health.update(false); 
+        health.update(isDashing);
     }
 
     private Enemy getClosestEnemyInRange() {
@@ -149,15 +155,48 @@ public class Player {
             if (overlapX && overlapY) {
                 System.out.println("Enemy hit!");
 
-               
+                e.takeDamage(damage);
                 projectiles.remove(i);
-                i--; 
+                i--;
 
-                //e.takeDamage(1); // if you have health
+                if (e.isDead()) {
+                    enemies.remove(j);
+                    j--;
+                }
 
-               
                 break;
             }
+        }
+    }
+}
+
+public void takeDamage(double damage) {
+    long currentTime = System.currentTimeMillis();
+
+    if (currentTime - lastDamageTime > damageCooldown) {
+
+        double reduction = perma.R * 0.01; 
+        double finalDamage = damage * (1 - reduction);
+
+        health.takeDamage(finalDamage);
+        lastDamageTime = currentTime;
+    }
+}
+
+
+public PERMA getPERMA() {
+    return perma;
+}
+
+public void applyUpgrade(Upgrade upgrade) {
+    switch (upgrade.type) {
+        case SPEED -> perma.increase("E", 10);
+        case DAMAGE -> perma.increase("M", 10);
+        case FIRE_RATE -> perma.increase("E", 10);
+        case RANGE -> perma.increase("A", 10);
+        case HEAL -> {
+            health.heal(20);
+            perma.increase("P", 10);
         }
     }
 }

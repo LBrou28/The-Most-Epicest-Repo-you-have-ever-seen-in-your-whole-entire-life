@@ -5,27 +5,36 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
+/* This enemy represents lack of focus. Drains Engagement */
 public class SpeedyGonzales extends Enemy {
 
+    private long lastDrainTime = 0;
+
     public SpeedyGonzales() {
-        super(Math.random() * 250, Math.random() * 250, 5, 5);
+        super(Math.random() * 250, Math.random() * 250, 1, 15);
+
         enemyImage = setSprite();
         width = enemyImage.getWidth() / 4;
         height = enemyImage.getHeight() / 4;
-        speed = 1.25;
-    }
-
-    public BufferedImage setSprite() {
-        BufferedImage enemy = null;
-        try {
-            enemy = ImageIO.read(getClass().getResourceAsStream("EnemyImages/sadghost.png"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return enemy;
+        speed = 3.5;
     }
 
     @Override
     public void attack(Player player) {
+        long time = System.currentTimeMillis();
+
+        if (time - lastDrainTime > 800) {
+            player.getPERMA().increase("E", -5); 
+            lastDrainTime = time;
+        }
+    }
+
+    private BufferedImage setSprite() {
+        try {
+            return ImageIO.read(getClass().getResourceAsStream("EnemyImages/sadness.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

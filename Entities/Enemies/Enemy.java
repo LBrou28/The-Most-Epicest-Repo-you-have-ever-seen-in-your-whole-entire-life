@@ -93,6 +93,14 @@ public abstract class Enemy {
         this.yPos = y;
     }
 
+    public void takeDamage(double amount) {
+        health -= amount;
+    }
+
+    public boolean isDead() {
+        return health <= 0;
+    }
+
     public abstract void attack(Player player);
 
     public void removeEnemy(ArrayList<Enemy> enemies, int enemy) {

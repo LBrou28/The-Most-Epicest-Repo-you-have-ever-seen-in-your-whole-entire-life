@@ -17,7 +17,7 @@ public class Sadness extends Enemy {
     public BufferedImage setSprite() {
         BufferedImage enemy = null;
         try {
-            enemy = ImageIO.read(getClass().getResourceAsStream("EnemyImages/SadnessChuck.png"));
+            enemy = ImageIO.read(getClass().getResourceAsStream("EnemyImages/sadghost.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }

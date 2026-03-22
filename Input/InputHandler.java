@@ -3,7 +3,7 @@ package Input;
 import java.awt.event.*;
 
 public class InputHandler extends KeyAdapter {
-    public boolean up, down, left, right, dash;
+    public boolean up, down, left, right, dash, restart;
 
     @Override
     public void keyPressed(KeyEvent e) {
@@ -13,6 +13,7 @@ public class InputHandler extends KeyAdapter {
             case KeyEvent.VK_S -> down = true;
             case KeyEvent.VK_D -> right = true;
             case KeyEvent.VK_SPACE -> dash = true;
+            case KeyEvent.VK_R -> restart = true;
         }
     }
 
@@ -24,6 +25,7 @@ public class InputHandler extends KeyAdapter {
             case KeyEvent.VK_S -> down = false;
             case KeyEvent.VK_D -> right = false;
             case KeyEvent.VK_SPACE -> dash = false;
+            case KeyEvent.VK_R -> restart = false;
         }
     }
 }
