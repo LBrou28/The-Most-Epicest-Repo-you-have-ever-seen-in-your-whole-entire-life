@@ -8,7 +8,6 @@ import java.io.*;
 import java.util.*;
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import Entities.PlayerHealth;
 public class GamePanel extends JPanel implements Runnable {
 
     BufferedImage chuck, grass;
