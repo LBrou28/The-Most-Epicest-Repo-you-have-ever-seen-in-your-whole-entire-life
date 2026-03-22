@@ -22,9 +22,9 @@ public class Player {
 
         long lastShotTime = 0;
         long shootCooldown = 500;
-        double shootRadius = 250;
+        double shootRadius = 150;
         double damage = 1;
-
+        
         InputHandler input;
 
     public Player(InputHandler input, ArrayList<Projectile> projectiles, ArrayList<Enemy> enemies) {
