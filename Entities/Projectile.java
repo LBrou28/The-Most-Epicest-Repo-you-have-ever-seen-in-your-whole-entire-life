@@ -22,6 +22,7 @@ public class Projectile {
         this.dy = dy;
         this.frames = frames;
     }
+
     public void update() {
         x += dx * speed;
         y += dy * speed;
@@ -43,10 +44,10 @@ public class Projectile {
         int screenY = (int)(y - playerY + centerY);
 
         if (frames != null) {
-            g.drawImage(frames[currentFrame], screenX, screenY, width, height, null);
+            g.drawImage(frames[currentFrame], screenX - width / 2, screenY - height / 2, width, height,null);
         } else {
             g.setColor(Color.BLACK);
-            g.fillRect(screenX, screenY, width, height);
+            g.fillRect(screenX - width / 2, screenY - height / 2, width, height);
         }
     }
 
@@ -59,9 +60,9 @@ public class Projectile {
     }
 
     public boolean checkBulletCollision(Player player) {
-    return x < player.x + player.width &&
-           x + width > player.x &&
-           y < player.y + player.height &&
-           y + height > player.y;
+    return x - width / 2 < player.x + player.width &&
+       x + width / 2 > player.x &&
+       y - height / 2 < player.y + player.height &&
+       y + height / 2 > player.y;
     }
 }

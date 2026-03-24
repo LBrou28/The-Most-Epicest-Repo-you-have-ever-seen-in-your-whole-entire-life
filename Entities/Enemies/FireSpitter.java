@@ -80,7 +80,6 @@ public class FireSpitter extends Enemy {
         }
     }
 
-<<<<<<< HEAD
     private BufferedImage[] loadFireFrames() {
     try {
         BufferedImage sheet = ImageIO.read(
@@ -110,10 +109,6 @@ public class FireSpitter extends Enemy {
             e.printStackTrace();
             return null;
         }
-=======
-    private BufferedImage setSprite() {
-        return sprites.get(1);
->>>>>>> 313b645e46dca1ceabff6f2751049cc0e240b95d
     }
     private BufferedImage makeTransparent(BufferedImage img) {
 
