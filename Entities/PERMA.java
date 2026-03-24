@@ -31,10 +31,10 @@ public class PERMA {
         int height = 10;
         int spacing = 18;
 
-        drawBar(g, "P", P, x, y, width, height, Color.YELLOW);
+        drawBar(g, "P", P, x, y, width, height, Color.RED);
         drawBar(g, "E", E, x, y + spacing, width, height, Color.BLUE);
         drawBar(g, "R", R, x, y + spacing * 2, width, height, Color.PINK);
-        drawBar(g, "M", M, x, y + spacing * 3, width, height, Color.ORANGE);
+        drawBar(g, "M", M, x, y + spacing * 3, width, height, Color.MAGENTA);
         drawBar(g, "A", A, x, y + spacing * 4, width, height, Color.GREEN);
     }
 

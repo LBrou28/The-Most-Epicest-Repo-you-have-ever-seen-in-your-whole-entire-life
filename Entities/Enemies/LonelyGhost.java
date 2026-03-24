@@ -11,7 +11,7 @@ public class LonelyGhost extends Enemy {
     private long lastDrainTime = 0;
 
     public LonelyGhost() {
-        super(Math.random() * 250, Math.random() * 250, 2, 6);
+        super(Math.random() * 250, Math.random() * 250, 10, 6);
 
         enemyImage = setSprite();
         width = enemyImage.getWidth() / 14;

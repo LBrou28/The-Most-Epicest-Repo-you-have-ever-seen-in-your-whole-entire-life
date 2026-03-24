@@ -4,6 +4,7 @@ import Entities.Player;
 import Entities.PowerUp;
 import Entities.PowerUpType;
 import Entities.Projectile;
+import Entities.SadnessProjectile;
 import Entities.Upgrade;
 import Entities.UpgradeManager;
 import Input.InputHandler;
@@ -24,8 +25,11 @@ public class GamePanel extends JPanel implements Runnable {
     Thread gameThread;
     boolean running;
 
+    BufferedImage[] playerFrames;
+
     ArrayList<Enemy> enemies = new ArrayList<>();
     ArrayList<Projectile> projectiles = new ArrayList<>();
+    ArrayList<SadnessProjectile> enemyProjectiles = new ArrayList<>();
     ArrayList<PowerUp> powerUps = new ArrayList<>();
 
     long lastPowerUpSpawnTime = 0;
@@ -37,7 +41,7 @@ public class GamePanel extends JPanel implements Runnable {
     private EnemySpawn spawner;
 
     private boolean gameOver = false;
-    private boolean gameWon = false;
+    private boolean gameWon = false;    
 
     private boolean choosingUpgrade = false;
     private ArrayList<Upgrade> currentUpgrades = new ArrayList<>();
@@ -50,6 +54,8 @@ public class GamePanel extends JPanel implements Runnable {
     private long bossIncomingStartTime = 0;
     private long bossIncomingDuration = 2500;
 
+    BufferedImage[] projectileFrames;
+
     public GamePanel() {
         this.setPreferredSize(new Dimension(800, 600));
         this.setBackground(Color.white);
@@ -60,12 +66,57 @@ public class GamePanel extends JPanel implements Runnable {
         this.setFocusable(true);
         SwingUtilities.invokeLater(() -> requestFocusInWindow());
 
-        player = new Player(input, projectiles, enemies);
-        spawner = new EnemySpawn(player, enemies, 800, 600);
-
+        player = new Player(input, projectiles, enemies, projectileFrames);
+        spawner = new EnemySpawn(
+            player,
+            enemies,
+            800,
+            600,
+            enemyProjectiles,
+            projectileFrames
+        );
         try {
             chuck = ImageIO.read(new File("src/assets/Chuck.png"));
             grass = ImageIO.read(new File("src/assets/grass.jpg"));
+
+            BufferedImage sheet = ImageIO.read(new File("src/assets/fireball.png"));
+
+            projectileFrames = new BufferedImage[4];
+
+            int frameWidth = sheet.getWidth() / 4;
+            int frameHeight = sheet.getHeight();
+
+            for (int i = 0; i < 4; i++) {
+                projectileFrames[i] = sheet.getSubimage(
+                    i * frameWidth,
+                    0,
+                    frameWidth,
+                    frameHeight
+                );
+            }
+
+            BufferedImage sheet2 = ImageIO.read(new File("src/assets/player_projectile.png"));
+
+            playerFrames = new BufferedImage[4];
+
+            int frameWidth2 = sheet2.getWidth() / 4;
+            int frameHeight2 = sheet2.getHeight();
+
+            for (int i = 0; i < 4; i++) {
+                BufferedImage raw = sheet2.getSubimage( i * frameWidth2,0, frameWidth2, frameHeight2);
+                playerFrames[i] = makeTransparent(raw);
+            }
+
+            player = new Player(input, projectiles, enemies, playerFrames);
+
+            spawner = new EnemySpawn(
+                player,
+                enemies,
+                800,
+                600,
+                enemyProjectiles,
+                projectileFrames
+            );
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -102,7 +153,7 @@ public class GamePanel extends JPanel implements Runnable {
         double bossX = player.x + 450;
         double bossY = player.y - 200;
 
-        boss = new SadnessChuck(bossX, bossY);
+        boss = new SadnessChuck(bossX, bossY, enemyProjectiles, projectileFrames);
         enemies.add(boss);
 
         bossIncoming = false;
@@ -156,7 +207,23 @@ public class GamePanel extends JPanel implements Runnable {
                         i--;
                     }
                 }
+            for (int i = 0; i < enemyProjectiles.size(); i++) {
+                SadnessProjectile p = enemyProjectiles.get(i);
 
+                p.update();
+
+                if (p.hitsPlayer(player)) {
+                    player.takeDamage(10);
+                    enemyProjectiles.remove(i);
+                    i--;
+                    continue;
+                }
+
+                if (p.isOffScreen(player.x, player.y, getWidth(), getHeight())) {
+                    enemyProjectiles.remove(i);
+                    i--;
+                }
+            }
                 if (!bossTriggered && player.getPERMA().isMaxed()) {
                     triggerBossPhase();
                 }
@@ -231,6 +298,31 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
+    private BufferedImage removeGreenScreen(BufferedImage image) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+
+        BufferedImage newImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+
+                int rgba = image.getRGB(x, y);
+                Color color = new Color(rgba, true);
+
+                if (color.getGreen() > color.getRed() + 20 &&
+                    color.getGreen() > color.getBlue() + 20) {
+
+                    newImage.setRGB(x, y, 0x00000000); 
+                } else {
+                    newImage.setRGB(x, y, rgba);
+                }
+            }
+        }
+
+        return newImage;
+    }
+
     private void separateEnemies() {
         for (int i = 0; i < enemies.size(); i++) {
             for (int j = i + 1; j < enemies.size(); j++) {
@@ -284,8 +376,32 @@ public class GamePanel extends JPanel implements Runnable {
         projectiles.clear();
         powerUps.clear();
 
-        player = new Player(input, projectiles, enemies);
-        spawner = new EnemySpawn(player, enemies, getWidth(), getHeight());
+        try {
+    chuck = ImageIO.read(new File("src/assets/Chuck.png"));
+    grass = ImageIO.read(new File("src/assets/grass.jpg"));
+
+    BufferedImage sheet = ImageIO.read(new File("src/assets/fireball.png"));
+    sheet = removeGreenScreen(sheet);
+
+    projectileFrames = new BufferedImage[4];
+
+    int frameWidth = sheet.getWidth() / 4;
+    int frameHeight = sheet.getHeight();
+
+    for (int i = 0; i < 4; i++) {
+        projectileFrames[i] = sheet.getSubimage(
+            i * frameWidth,
+            0,
+            frameWidth,
+            frameHeight
+        );
+    }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        player = new Player(input, projectiles, enemies, projectileFrames);
 
         gameOver = false;
         gameWon = false;
@@ -341,6 +457,10 @@ public class GamePanel extends JPanel implements Runnable {
             p.draw(g, player.x, player.y, centerX, centerY);
         }
 
+        for (SadnessProjectile p : enemyProjectiles) {
+            p.draw(g, player.x, player.y, centerX, centerY);
+        }   
+        
         Graphics2D g2 = (Graphics2D) g;
         g2.setColor(new Color(100, 100, 100, 80));
 
@@ -458,4 +578,32 @@ public class GamePanel extends JPanel implements Runnable {
             gWin.drawString(restart, getWidth() / 2 - restartWidth / 2, getHeight() / 2 + 35);
         }
     }
+
+    private BufferedImage makeTransparent(BufferedImage img) {
+
+    BufferedImage newImg = new BufferedImage(
+        img.getWidth(),
+        img.getHeight(),
+        BufferedImage.TYPE_INT_ARGB
+    );
+
+    for (int x = 0; x < img.getWidth(); x++) {
+        for (int y = 0; y < img.getHeight(); y++) {
+
+            int rgba = img.getRGB(x, y);
+
+            int r = (rgba >> 16) & 0xff;
+            int g = (rgba >> 8) & 0xff;
+            int b = rgba & 0xff;
+
+            if (g > 0 && r < 120 && b < 120) {
+                newImg.setRGB(x, y, 0x00000000);
+            } else {
+                newImg.setRGB(x, y, rgba);
+            }
+        }
+    }
+
+    return newImg;
+}
 }

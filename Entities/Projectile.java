@@ -1,32 +1,53 @@
 package Entities;
 import java.awt.*;
-
+import java.awt.image.BufferedImage;
 public class Projectile {
 
     public double x, y;
     public double dx, dy;
     int speed = 6;
-    int width = 10;
-    int height = 5;
+    int width = 30;
+    int height = 20;
+    
+    BufferedImage[] frames;
+    int currentFrame = 0;
 
-    public Projectile(double x, double y, double dx, double dy) {
+    long lastFrameTime = 0;
+    long frameDelay = 100;
+
+    public Projectile(double x, double y, double dx, double dy, BufferedImage[] frames) {
         this.x = x;
         this.y = y;
         this.dx = dx;
         this.dy = dy;
+        this.frames = frames;
     }
-
     public void update() {
         x += dx * speed;
         y += dy * speed;
+
+        if (frames != null) {
+            long currentTime = System.currentTimeMillis();
+
+            if (currentTime - lastFrameTime > frameDelay) {
+                currentFrame = (currentFrame + 1) % frames.length;
+                lastFrameTime = currentTime;
+            }
+        }
     }
+        
 
     public void draw(Graphics g, int playerX, int playerY, int centerX, int centerY) {
+
         int screenX = (int)(x - playerX + centerX);
         int screenY = (int)(y - playerY + centerY);
 
-        g.setColor(Color.BLACK);
-        g.fillRect(screenX, screenY, width, height);
+        if (frames != null) {
+            g.drawImage(frames[currentFrame], screenX, screenY, width, height, null);
+        } else {
+            g.setColor(Color.BLACK);
+            g.fillRect(screenX, screenY, width, height);
+        }
     }
 
     public boolean isOffScreen(int playerX, int playerY, int screenWidth, int screenHeight) {

@@ -3,7 +3,7 @@ package Entities;
 import Entities.Enemies.*;
 import Input.InputHandler;
 import java.util.ArrayList;
-
+import java.awt.image.BufferedImage;
 public class Player {
 
     public int x, y, width = 32, height = 64;
@@ -33,12 +33,14 @@ public class Player {
     private long damageCooldown = 500;
     private PERMA perma = new PERMA();
 
-    public Player(InputHandler input, ArrayList<Projectile> projectiles, ArrayList<Enemy> enemies) {
+    BufferedImage[] projectileFrames;
+
+    public Player(InputHandler input, ArrayList<Projectile> projectiles, ArrayList<Enemy> enemies, BufferedImage[] projectileFrames) {
+
         this.input = input;
         this.projectiles = projectiles;
         this.enemies = enemies;
-        x = 100;
-        y = 100;
+        this.projectileFrames = projectileFrames;
     }
 
     public void update() {
@@ -128,9 +130,9 @@ public class Player {
             dx /= length;
             dy /= length;
 
-            projectiles.add(new Projectile(px, py, dx, dy));
+            projectiles.add(new Projectile(px, py, dx, dy, projectileFrames));
         }
-    }
+    }   
 
     public void checkBulletCollision() {
         for (int i = 0; i < projectiles.size(); i++) {
@@ -172,20 +174,15 @@ public class Player {
     private void rewardPERMAForKill(Enemy e) {
         if (e instanceof FireSpitter) {
             perma.increase("P", 5);
-        } else if (e instanceof SpeedyGonzales) {
-            perma.increase("E", 5);
+        
         } else if (e instanceof LonelyGhost) {
             perma.increase("R", 5);
         } else if (e instanceof DoubtPhantom) {
             perma.increase("M", 5);
         } else if (e instanceof ZynDemon) {
             perma.increase("A", 5);
-        } else if (e instanceof Sadness) {
-            perma.increase("P", 2);
-            perma.increase("E", 2);
-            perma.increase("R", 2);
-            perma.increase("M", 2);
-            perma.increase("A", 2);
+        } else if (e instanceof SpeedyGonzales) {
+            perma.increase("E", 5);
         }
     }
 

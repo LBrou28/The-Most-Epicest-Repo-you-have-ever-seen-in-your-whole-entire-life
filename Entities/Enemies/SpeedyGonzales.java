@@ -11,7 +11,7 @@ public class SpeedyGonzales extends Enemy {
     private long lastDrainTime = 0;
 
     public SpeedyGonzales() {
-        super(Math.random() * 250, Math.random() * 250, 2, 3);
+        super(Math.random() * 250, Math.random() * 250, 10, 3);
 
         enemyImage = setSprite();
         width = enemyImage.getWidth() / 4;

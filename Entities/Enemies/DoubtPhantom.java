@@ -11,7 +11,7 @@ public class DoubtPhantom extends Enemy {
     private long lastDebuffTime = 0;
 
     public DoubtPhantom() {
-        super(Math.random() * 250, Math.random() * 250, 2, 6);
+        super(Math.random() * 250, Math.random() * 250, 10, 6);
 
         enemyImage = setSprite();
         width = enemyImage.getWidth() / 12;

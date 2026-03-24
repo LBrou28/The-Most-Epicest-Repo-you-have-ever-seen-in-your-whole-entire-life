@@ -3,6 +3,8 @@ package Entities;
 import Entities.Enemies.*;
 import java.util.ArrayList;
 import java.util.Random;
+import Entities.SadnessProjectile;
+import java.awt.image.BufferedImage;
 
 public class EnemySpawn {
 
@@ -26,12 +28,24 @@ public class EnemySpawn {
 
     private Random random = new Random();
 
-    public EnemySpawn(Player player, ArrayList<Enemy> enemies, int screenWidth, int screenHeight) {
-        this.player = player;
-        this.enemies = enemies;
-        this.screenWidth = screenWidth;
-        this.screenHeight = screenHeight;
-    }
+    private ArrayList<SadnessProjectile> enemyProjectiles;
+    private BufferedImage[] projectileFrames;
+
+    public EnemySpawn(Player player,
+                  ArrayList<Enemy> enemies,
+                  int screenWidth,
+                  int screenHeight,
+                  ArrayList<SadnessProjectile> enemyProjectiles,
+                  BufferedImage[] projectileFrames) {
+
+    this.player = player;
+    this.enemies = enemies;
+    this.screenWidth = screenWidth;
+    this.screenHeight = screenHeight;
+
+    this.enemyProjectiles = enemyProjectiles;
+    this.projectileFrames = projectileFrames;
+}
 
     public void update() {
         long currentTime = System.currentTimeMillis();
@@ -74,22 +88,22 @@ public class EnemySpawn {
             int side = random.nextInt(4);
 
             switch (side) {
-                case 0: // top
+                case 0: 
                     spawnX = player.x + random.nextInt(screenWidth + 200) - (screenWidth / 2 + 100);
                     spawnY = player.y - screenHeight / 2.0 - margin;
                     break;
 
-                case 1: // bottom
+                case 1: 
                     spawnX = player.x + random.nextInt(screenWidth + 200) - (screenWidth / 2 + 100);
                     spawnY = player.y + screenHeight / 2.0 + margin;
                     break;
 
-                case 2: // left
+                case 2: 
                     spawnX = player.x - screenWidth / 2.0 - margin;
                     spawnY = player.y + random.nextInt(screenHeight + 200) - (screenHeight / 2 + 100);
                     break;
 
-                case 3: // right
+                case 3: 
                     spawnX = player.x + screenWidth / 2.0 + margin;
                     spawnY = player.y + random.nextInt(screenHeight + 200) - (screenHeight / 2 + 100);
                     break;
@@ -112,8 +126,8 @@ public class EnemySpawn {
         int roll = random.nextInt(100);
         Enemy e;
 
-        if (roll < 8) {
-            e = new FireSpitter();
+        if (roll < 16) {
+            e = new FireSpitter(enemyProjectiles, projectileFrames);
         } else if (roll < 38) {
             e = new SpeedyGonzales();
         } else if (roll < 58) {
@@ -123,7 +137,7 @@ public class EnemySpawn {
         } else if (roll < 86) {
             e = new Sadness();
         } else {
-            e = new ZynDemon();
+            e = new ZynDemon(enemyProjectiles);
         }
 
         e.setX(x);

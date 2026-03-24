@@ -23,6 +23,7 @@ public class ImageInterface {
             sprites.add(ImageIO.read(getClass().getResourceAsStream("EnemyImages/sadghost.png")));
             sprites.add(ImageIO.read(getClass().getResourceAsStream("EnemyImages/sadness.png")));
             sprites.add(ImageIO.read(getClass().getResourceAsStream("EnemyImages/Witch.png")));
+            
         } catch (IOException e) {
             e.printStackTrace();
         }
